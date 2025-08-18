@@ -20,6 +20,7 @@ apiClient.interceptors.request.use(
                 console.warn("Error al leer el token:", err);
             }
         }
+        // Si no hay token, continuamos sin autorización para endpoints públicos
 
         return config;
     },
@@ -42,3 +43,15 @@ export const register = async (data) => {
 export const login = async (data) => {
     return await apiClient.post('/auth/login', data);
 };
+
+export const getPublications = async () => {
+    try {
+        const response = await apiClient.get(`/publication/getPublications`)
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}

@@ -37,7 +37,7 @@ export const useLogin = () => {
         })
       );
 
-      navigate("/home", { replace: true });
+      navigate("/publications", { replace: true });
 
     } catch (error) {
       const errorMessage = error?.response?.data?.error || 
