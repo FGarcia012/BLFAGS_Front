@@ -74,10 +74,10 @@ export const PublicationList = ({
       <div className="publications-list">
         {publications.map((publication) => (
           <PublicationCard
-            key={publication.pid}
+            key={publication._id || publication.pid}
             publication={publication}
             onSelect={handlePublicationSelect}
-            isSelected={selectedPublication?.pid === publication.pid}
+            isSelected={selectedPublication?._id === publication._id || selectedPublication?.pid === publication.pid}
           />
         ))}
       </div>

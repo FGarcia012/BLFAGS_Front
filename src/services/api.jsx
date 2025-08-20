@@ -20,7 +20,6 @@ apiClient.interceptors.request.use(
                 console.warn("Error al leer el token:", err);
             }
         }
-        // Si no hay token, continuamos sin autorización para endpoints públicos
 
         return config;
     },

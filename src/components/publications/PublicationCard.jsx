@@ -22,14 +22,56 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
   const renderMedia = () => {
     if (!publication.media || mediaError) return null;
 
+    const isVideo = /\.(mp4|webm|ogg)$/i.test(publication.media);
     return (
       <div className="publication-media">
-        <img
-          src={publication.media}
-          alt={publication.title}
-          onError={handleImageError}
-          className="publication-image"
-        />
+        {isVideo ? (
+          <video
+            src={publication.media}
+            controls
+            className="publication-video"
+            onError={handleImageError}
+          />
+        ) : (
+          <img
+            src={publication.media}
+            alt={publication.title}
+            onError={handleImageError}
+            className="publication-image"
+          />
+        )}
+      </div>
+    );
+  };
+  // Renderiza los comentarios al final de la publicación
+  const renderComments = () => {
+    if (!publication.comments || publication.comments.length === 0) return null;
+    return (
+      <div className="publication-comments">
+        <h4 className="comments-title">Comentarios</h4>
+        {publication.comments.map((comment) => (
+          <div className="comment-item" key={comment._id || comment.cid}>
+            <div className="comment-user-info">
+              <img
+                src={comment.user?.profilePicture || `https://ui-avatars.com/api/?name=${comment.user?.username || 'U'}`}
+                alt={comment.user?.username || 'Usuario'}
+                className="comment-avatar"
+              />
+              <span className="comment-username">@{comment.user?.username || 'Usuario'}</span>
+              <span className="comment-date">{formatDate(comment.createdAt)}</span>
+            </div>
+            {comment.text && (
+              <div className="comment-text">{comment.text}</div>
+            )}
+            {comment.media && (
+              /\.(mp4|webm|ogg)$/i.test(comment.media) ? (
+                <video src={comment.media} controls className="comment-media" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, marginTop: 8 }} />
+              ) : (
+                <img src={comment.media} alt="media" className="comment-media" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, marginTop: 8 }} />
+              )
+            )}
+          </div>
+        ))}
       </div>
     );
   };
@@ -75,15 +117,14 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
       {/* Header con usuario y fecha primero */}
       <div className="publication-header">
         <div className="user-info">
-          {publication.user?.profilePicture && (
-            <img
-              src={publication.user.profilePicture}
-              alt={publication.user.username}
-              className="user-avatar"
-            />
-          )}
+          <img
+            src={publication.user?.profilePicture || 'https://ui-avatars.com/api/?name=' + (publication.user?.username || 'U')}
+            alt={publication.user?.username || 'Usuario'}
+            className="user-avatar"
+            style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e0e0e0', background: '#f5f5f5' }}
+          />
           <div className="user-details">
-            <span className="username">@{publication.user?.username}</span>
+            <span className="username">@{publication.user?.username || 'Usuario'}</span>
             <span className="publication-date">{formatDate(publication.createdAt)}</span>
           </div>
         </div>
@@ -93,6 +134,9 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
           </span>
         </div>
       </div>
+
+      {/* Renderizar media después del contenido de texto */}
+      {renderMedia()}
 
       {/* Título de la publicación */}
       <div className="publication-content">
@@ -108,9 +152,6 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
             <p className="publication-description">
               {validateText(publication.description) ? publication.description : 'Descripción no disponible'}
             </p>
-            <button className="read-more-btn">
-              Leer más
-            </button>
           </div>
         )}
 
@@ -118,13 +159,13 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
         {renderHashtags()}
       </div>
 
-      {/* Renderizar media después del contenido de texto */}
-      {renderMedia()}
-
       {/* Footer con estadísticas */}
       <div className="publication-footer">
         {renderStats()}
       </div>
+
+      {/* Comentarios al final */}
+      {renderComments()}
     </div>
   );
 };
