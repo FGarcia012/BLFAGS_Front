@@ -53,40 +53,62 @@
 }
 .comment-media {
   margin-left: 38px;
-  margin-top: 2px;
-  border-radius: 8px;
+  margin-top: 8px;
+  border-radius: 12px;
   background: #e3f2fd;
+  max-width: 350px;
+  max-height: 250px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(21,101,192,0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.comment-media:hover {
+  transform: scale(1.02);
 }
 /* Ajustes para media y avatar en publicaciones */
-.publication-media {
-  width: 100%;
-  height: 480px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem 0;
-  background: #f8f9fa;
-  overflow: hidden;
-  border-radius: 10px;
+/* Contenedor principal de media - estilo Instagram */
+.media-container {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
-.publication-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
-  border-radius: 10px;
-  background: #f8f9fa;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  display: block;
+
+.publication-card .publication-media {
+  width: 100% !important;
+  height: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+  background: #f0f2f5 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  border-radius: 12px !important;
 }
-.publication-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  background: #000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  display: block;
+
+.publication-card .publication-image {
+  max-width: 95% !important;
+  max-height: 95% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.publication-card .publication-video {
+  max-width: 100% !important;
+  max-height: 600px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #000 !important;
+  display: block !important;
+  border-radius: 8px !important;
 }
 .user-avatar {
   width: 42px;

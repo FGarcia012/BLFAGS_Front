@@ -272,23 +272,6 @@ export const Login = ({ switchAuthHandler }) => {
             )}
           </div>
 
-          {/* Opciones adicionales */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center space-x-2 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                className="w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 transition-all"
-              />
-              <span className="text-gray-600 group-hover:text-gray-800 transition-colors">Recordarme</span>
-            </label>
-            <button 
-              type="button"
-              className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-            >
-              ¿Olvidaste tu contraseña?
-            </button>
-          </div>
-
           {/* Botón Login */}
           <motion.button
             type="submit"

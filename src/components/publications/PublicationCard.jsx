@@ -43,7 +43,6 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
       </div>
     );
   };
-  // Renderiza los comentarios al final de la publicación
   const renderComments = () => {
     if (!publication.comments || publication.comments.length === 0) return null;
     return (
@@ -64,11 +63,37 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
               <div className="comment-text">{comment.text}</div>
             )}
             {comment.media && (
-              /\.(mp4|webm|ogg)$/i.test(comment.media) ? (
-                <video src={comment.media} controls className="comment-media" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, marginTop: 8 }} />
-              ) : (
-                <img src={comment.media} alt="media" className="comment-media" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, marginTop: 8 }} />
-              )
+              <div style={{ marginLeft: '38px', marginTop: '8px' }}>
+                {/\.(mp4|webm|ogg)$/i.test(comment.media) ? (
+                  <video 
+                    src={comment.media} 
+                    controls 
+                    className="comment-media"
+                    style={{ 
+                      maxWidth: '350px', 
+                      maxHeight: '250px', 
+                      width: 'auto',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      objectFit: 'cover'
+                    }} 
+                  />
+                ) : (
+                  <img 
+                    src={comment.media} 
+                    alt="media" 
+                    className="comment-media"
+                    style={{ 
+                      maxWidth: '350px', 
+                      maxHeight: '250px', 
+                      width: 'auto',
+                      height: 'auto',
+                      borderRadius: '12px',
+                      objectFit: 'cover'
+                    }} 
+                  />
+                )}
+              </div>
             )}
           </div>
         ))}
@@ -136,7 +161,9 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
       </div>
 
       {/* Renderizar media después del contenido de texto */}
-      {renderMedia()}
+      <div className="media-container">
+        {renderMedia()}
+      </div>
 
       {/* Título de la publicación */}
       <div className="publication-content">
