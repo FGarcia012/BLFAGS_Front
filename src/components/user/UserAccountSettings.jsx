@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Trash2, AlertTriangle, Shield, Eye, EyeOff } from 'lucide-react';
 import { deleteUser } from '../../services/api';
-import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import './UserSettings.css';
@@ -41,7 +40,8 @@ export const UserAccountSettings = ({ userId }) => {
         
         try {
             const targetUserId = userId || currentUser._id || currentUser.uid;
-            const response = await deleteUser(targetUserId);
+            
+            const response = await deleteUser(targetUserId, { confirm: "Si" });
             
             if (response.success) {
                 toast.success('Cuenta eliminada correctamente');
@@ -57,7 +57,7 @@ export const UserAccountSettings = ({ userId }) => {
             }
         } catch (error) {
             toast.error('Error al eliminar la cuenta');
-            console.error('Error:', error);
+            console.error('Error eliminando cuenta:', error);
         } finally {
             setIsDeleting(false);
         }
@@ -199,7 +199,7 @@ export const UserAccountSettings = ({ userId }) => {
                                 >
                                     {isDeleting ? (
                                         <>
-                                            <LoadingSpinner size="small" />
+                                            <div className="loading-spinner"></div>
                                             Eliminando...
                                         </>
                                     ) : (

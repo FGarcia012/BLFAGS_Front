@@ -181,9 +181,12 @@ export const getUserById = async (id) => {
     }
 }
 
-export const deleteUser = async (id) => {
+export const deleteUser = async (id, confirmationData = null) => {
     try {
-        const response = await apiClient.delete(`/user/deleteUser/${id}`);
+        const response = await apiClient.delete(`/user/deleteUser/${id}`, {
+            data: confirmationData || { confirm: "Si" }
+        });
+        
         return response.data;
     } catch (e) {
         return {
