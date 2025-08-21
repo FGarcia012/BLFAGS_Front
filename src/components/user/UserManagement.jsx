@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Search, Trash2, Eye, Shield, User, Mail, Calendar, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, Search, Trash2, Eye, Shield, User, Mail, Calendar, AlertTriangle, X, Settings } from 'lucide-react';
 import { getUsers, deleteUser, getUserById } from '../../services/api';
 import './UserSettings.css';
 
 export const UserManagement = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -107,6 +109,12 @@ export const UserManagement = () => {
         } catch {
             return 'N/A';
         }
+    };
+
+    const handleEditUser = (user) => {
+        // Navegar a la página de configuración del usuario seleccionado
+        const userId = user._id || user.uid;
+        navigate(`/user/${userId}/settings`);
     };
 
     const getRoleIcon = (role) => {
@@ -396,15 +404,19 @@ export const UserManagement = () => {
                         overflow: 'auto'
                     }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-                            <h3 style={{ margin: 0 }}>Detalles del Usuario</h3>
+                            <h3 style={{ margin: 0, color: '#1f2937', fontSize: '20px', fontWeight: '600' }}>Detalles del Usuario</h3>
                             <button
                                 onClick={() => setSelectedUser(null)}
                                 style={{
                                     background: 'none',
                                     border: 'none',
                                     cursor: 'pointer',
-                                    padding: '4px'
+                                    padding: '4px',
+                                    color: '#6b7280',
+                                    borderRadius: '4px'
                                 }}
+                                onMouseOver={(e) => e.target.style.background = '#f3f4f6'}
+                                onMouseOut={(e) => e.target.style.background = 'none'}
                             >
                                 <X size={20} />
                             </button>
@@ -433,29 +445,98 @@ export const UserManagement = () => {
                                         <User size={32} color="#9ca3af" />
                                     )}
                                 </div>
-                                <h4 style={{ margin: '0 0 4px' }}>{selectedUser.name}</h4>
-                                <p style={{ margin: 0, color: '#6b7280' }}>@{selectedUser.username}</p>
+                                <h4 style={{ margin: '0 0 4px', color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>{selectedUser.name}</h4>
+                                <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>@{selectedUser.username}</p>
                             </div>
                             
                             <div style={{ display: 'grid', gap: '12px' }}>
-                                <div>
-                                    <strong>Email:</strong> {selectedUser.email}
+                                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>Email:</strong> 
+                                    <span style={{ color: '#1f2937', marginLeft: '8px' }}>{selectedUser.email}</span>
                                 </div>
-                                <div>
-                                    <strong>Rol:</strong> {getRoleBadge(selectedUser.role)}
+                                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>Rol:</strong> 
+                                    <span style={{ marginLeft: '8px' }}>{getRoleBadge(selectedUser.role)}</span>
                                 </div>
-                                <div>
-                                    <strong>Estado:</strong> {getStatusBadge(selectedUser.status)}
+                                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>Estado:</strong> 
+                                    <span style={{ marginLeft: '8px' }}>{getStatusBadge(selectedUser.status)}</span>
                                 </div>
-                                <div>
-                                    <strong>Fecha de registro:</strong> {formatDate(selectedUser.createdAt)}
+                                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>Fecha de registro:</strong> 
+                                    <span style={{ color: '#1f2937', marginLeft: '8px' }}>{formatDate(selectedUser.createdAt)}</span>
                                 </div>
-                                <div>
-                                    <strong>Última actualización:</strong> {formatDate(selectedUser.updatedAt)}
+                                <div style={{ padding: '8px 0', borderBottom: '1px solid #e5e7eb' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>Última actualización:</strong> 
+                                    <span style={{ color: '#1f2937', marginLeft: '8px' }}>{formatDate(selectedUser.updatedAt)}</span>
                                 </div>
-                                <div>
-                                    <strong>ID:</strong> <code>{selectedUser.uid}</code>
+                                <div style={{ padding: '8px 0' }}>
+                                    <strong style={{ color: '#374151', fontSize: '14px' }}>ID:</strong> 
+                                    <code style={{ 
+                                        background: '#f3f4f6', 
+                                        padding: '2px 6px', 
+                                        borderRadius: '4px', 
+                                        fontSize: '12px',
+                                        color: '#1f2937',
+                                        marginLeft: '8px'
+                                    }}>{selectedUser._id}</code>
                                 </div>
+                            </div>
+                            
+                            {/* Botones de acción */}
+                            <div style={{ 
+                                display: 'flex', 
+                                gap: '12px', 
+                                marginTop: '20px', 
+                                paddingTop: '16px',
+                                borderTop: '1px solid #e5e7eb'
+                            }}>
+                                <button
+                                    onClick={() => handleEditUser(selectedUser)}
+                                    style={{
+                                        background: '#3b82f6',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '8px 16px',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        fontWeight: '500',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = '#2563eb'}
+                                    onMouseOut={(e) => e.target.style.background = '#3b82f6'}
+                                >
+                                    <Settings size={16} />
+                                    Editar Usuario
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setUserToDelete(selectedUser);
+                                        setSelectedUser(null);
+                                        setShowDeleteModal(true);
+                                    }}
+                                    style={{
+                                        background: '#dc2626',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '8px 16px',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        fontWeight: '500',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                    onMouseOver={(e) => e.target.style.background = '#b91c1c'}
+                                    onMouseOut={(e) => e.target.style.background = '#dc2626'}
+                                >
+                                    <Trash2 size={16} />
+                                    Eliminar Usuario
+                                </button>
                             </div>
                         </div>
                     </div>
