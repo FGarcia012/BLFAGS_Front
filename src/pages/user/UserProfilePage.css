@@ -3,9 +3,16 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #312e81 100%);
     background-attachment: fixed;
-    padding-top: 80px; /* Para el navbar */
+    padding-top: 100px; /* Para el navbar y el botón */
     overflow: hidden;
     color: white;
+}
+
+.back-button-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
 }
 
 .user-profile-container {
@@ -18,7 +25,13 @@
 
 @media (max-width: 768px) {
     .user-profile-page {
-        padding-top: 70px;
+        padding-top: 80px;
+    }
+    
+    .back-button-container {
+        position: fixed;
+        top: 12px;
+        left: 12px;
     }
     
     .user-profile-container {

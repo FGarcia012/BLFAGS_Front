@@ -146,7 +146,7 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
             src={publication.user?.profilePicture || 'https://ui-avatars.com/api/?name=' + (publication.user?.username || 'U')}
             alt={publication.user?.username || 'Usuario'}
             className="user-avatar"
-            style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e0e0e0', background: '#f5f5f5' }}
+            style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e0e0e0', background: '#f5f5f5' }}
           />
           <div className="user-details">
             <span className="username">@{publication.user?.username || 'Usuario'}</span>

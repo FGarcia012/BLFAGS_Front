@@ -5,16 +5,16 @@
     background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #312e81 100%);
     background-attachment: fixed;
     padding: 20px;
-    padding-top: 80px;
+    padding-top: 100px;
     overflow: hidden;
     color: white;
 }
 
 .back-button-container {
-    position: absolute;
+    position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .container {
@@ -31,19 +31,39 @@
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(96, 165, 250, 0.1);
     overflow: hidden;
+    margin-top: 20px;
+    animation: fadeInUp 0.6s ease-out;
+    padding: 20px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .settings-header {
-    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    border-radius: 16px;
     color: white;
-    padding: 40px;
+    padding: 32px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 24px;
     position: relative;
     overflow: hidden;
+    min-height: 120px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .settings-header::before {
@@ -53,7 +73,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    background: linear-gradient(45deg, transparent 30%, rgba(96, 165, 250, 0.1) 50%, transparent 70%);
     animation: shimmer 3s infinite;
 }
 
@@ -82,16 +102,19 @@
 
 .header-title {
     margin: 0 0 8px 0;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 800;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
 }
 
 .header-subtitle {
     margin: 0;
     opacity: 0.9;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
+    line-height: 1.4;
+    max-width: 400px;
 }
 
 .user-preview {
@@ -99,11 +122,13 @@
     align-items: center;
     gap: 16px;
     background: rgba(255, 255, 255, 0.15);
-    padding: 20px;
+    padding: 16px 20px;
     border-radius: 12px;
     position: relative;
     z-index: 2;
     backdrop-filter: blur(10px);
+    min-width: 200px;
+    flex-shrink: 0;
 }
 
 .user-avatar {
@@ -141,7 +166,11 @@
 
 .tabs-container {
     display: flex;
-    min-height: 650px;
+    min-height: 600px;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .tabs-nav {
@@ -200,14 +229,18 @@
     padding: 0;
     background: rgba(30, 41, 59, 0.3);
     backdrop-filter: blur(10px);
+    min-height: 500px;
+    overflow-y: auto;
+    position: relative;
 }
 
 /* Override de estilos para componentes dentro de pestañas */
 .tab-content .user-settings {
     background: transparent;
-    padding: 40px;
+    padding: 32px 40px;
     margin: 0;
     max-width: none;
+    color: white;
 }
 
 .tab-content .settings-header {
@@ -341,6 +374,13 @@
     justify-content: center;
     min-height: 500px;
     gap: 20px;
+    color: white;
+}
+
+.loading-container p {
+    font-size: 16px;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .loading-spinner {
@@ -359,20 +399,61 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .user-settings-page {
-        padding: 12px;
-        padding-top: 70px;
+        padding: 16px;
+        padding-top: 90px;
     }
     
     .settings-header {
-        padding: 24px;
-        flex-direction: column;
-        align-items: flex-start;
+        padding: 24px 28px;
     }
     
     .header-title {
-        font-size: 28px;
+        font-size: 26px;
+    }
+    
+    .tabs-nav {
+        width: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-settings-page {
+        padding: 12px;
+        padding-top: 80px;
+    }
+    
+    .back-button-container {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+    }
+    
+    .settings-header {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        min-height: auto;
+    }
+    
+    .header-content {
+        width: 100%;
+    }
+    
+    .header-title {
+        font-size: 24px;
+    }
+    
+    .header-subtitle {
+        font-size: 14px;
+        max-width: none;
+    }
+    
+    .user-preview {
+        width: 100%;
+        min-width: auto;
     }
     
     .tabs-container {
@@ -395,6 +476,7 @@
         border-bottom: 3px solid transparent;
         padding: 14px 20px;
         transform: none;
+        min-width: auto;
     }
     
     .tab-button:hover {
@@ -407,11 +489,11 @@
     }
     
     .tab-content .user-settings {
-        padding: 24px;
+        padding: 20px;
     }
     
     .tab-content .settings-form {
-        padding: 24px;
+        padding: 20px;
     }
 }
 

@@ -169,7 +169,7 @@ const UserSettingsPageNew = () => {
                                         <User size={24} />
                                     )}
                                 </div>
-                                <div className="user-info">
+                                <div className="user-info1">
                                     <h3>{targetUser.name}</h3>
                                     <p>@{targetUser.username}</p>
                                 </div>

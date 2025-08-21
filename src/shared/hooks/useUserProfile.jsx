@@ -44,6 +44,10 @@ export const useUserProfile = (userId) => {
                 throw new Error(response.e?.response?.data?.message || 'Error al cargar el perfil');
             }
             
+            console.log('useUserProfile - Respuesta completa:', response);
+            console.log('useUserProfile - Usuario:', response.user);
+            console.log('useUserProfile - Nombre del usuario:', response.user?.name);
+            
             setUserProfile(response.user);
             setStats(response.stats);
         } catch (err) {

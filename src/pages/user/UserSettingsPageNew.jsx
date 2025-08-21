@@ -67,6 +67,10 @@ const UserSettingsPageNew = () => {
 
             const response = await getUserById(targetUserId);
             if (response.success) {
+                console.log('UserSettingsPageNew - Respuesta getUserById:', response);
+                console.log('UserSettingsPageNew - Usuario objetivo:', response.user);
+                console.log('UserSettingsPageNew - Nombre del usuario objetivo:', response.user?.name);
+                
                 setTargetUser(response.user);
                 setProfilePicture(response.user.profilePicture || '');
             }
@@ -142,10 +146,21 @@ const UserSettingsPageNew = () => {
         return (
             <div className="user-settings-page">
                 <div className="container">
-                    <div className="loading-container">
+                    <motion.div 
+                        className="loading-container"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <div className="loading-spinner"></div>
-                        <p>Cargando configuraciones...</p>
-                    </div>
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            Cargando configuraciones...
+                        </motion.p>
+                    </motion.div>
                 </div>
             </div>
         );
@@ -210,19 +225,34 @@ const UserSettingsPageNew = () => {
             })}
 
             {/* Botón de volver a publicaciones */}
-            <div className="back-button-container">
+            <motion.div 
+                className="back-button-container"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+            >
                 <BackButton 
                     to="/publications" 
                     text="Volver a Publicaciones" 
                     icon="publications" 
                     variant="success"
                 />
-            </div>
+            </motion.div>
 
             <div className="container">
-                <div className="settings-container">
+                <motion.div 
+                    className="settings-container"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
                     {/* Header */}
-                    <div className="settings-header">
+                    <motion.div 
+                        className="settings-header"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
                         <div className="header-content">
                             <div className="header-icon">
                                 <Settings size={28} />
@@ -255,29 +285,40 @@ const UserSettingsPageNew = () => {
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     {/* Navegación por pestañas */}
                     <div className="tabs-container">
                         <div className="tabs-nav">
-                            {tabs.map((tab) => (
-                                <button
+                            {tabs.map((tab, index) => (
+                                <motion.button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                                    whileHover={{ x: 4 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
                                     {tab.icon}
                                     <span>{tab.label}</span>
-                                </button>
+                                </motion.button>
                             ))}
                         </div>
 
                         {/* Contenido de la pestaña activa */}
-                        <div className="tab-content">
+                        <motion.div 
+                            className="tab-content"
+                            key={activeTab}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
                             {tabs.find(tab => tab.id === activeTab)?.component}
-                        </div>
+                        </motion.div>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

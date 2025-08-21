@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { UserProfile } from '../../components/user/UserProfile';
+import { BackButton } from '../../components/BackButton/BackButton';
 import './UserProfilePage.css';
 
 const shootingStarColors = ["#1e40af", "#3b82f6", "#60a5fa"];
@@ -47,6 +48,21 @@ export const UserProfilePage = () => {
 
     return (
         <div className="user-profile-page">
+            {/* Botón de volver a publicaciones */}
+            <motion.div 
+                className="back-button-container"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <BackButton 
+                    to="/publications" 
+                    text="Volver a Publicaciones" 
+                    icon="publications" 
+                    variant="success"
+                />
+            </motion.div>
+
             {/* Partículas animadas */}
             {particlesArray.map((_, i) => {
                 const size = Math.random() * 3 + 1;

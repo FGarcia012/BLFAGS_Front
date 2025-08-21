@@ -135,7 +135,7 @@ export const Navbar = () => {
               {isProfileMenuOpen && (
                 <div className="dropdown-menu">
                   <div className="dropdown-header">
-                    <div className="user-info">
+                    <div className="user-info1">
                       <p className="user-display-name">{user.name || user.username}</p>
                       <p className="user-email">@{user.username}</p>
                     </div>

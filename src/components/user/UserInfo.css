@@ -1,0 +1,75 @@
+.user-info1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.user-name {
+    font-size: 1.0rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 1rem 0rem 1rem 0rem;
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1e40af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.7));
+    text-align: center;
+}
+
+.user-name1 {
+    font-size: 2.0rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0rem 1rem 0rem 7rem;
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1e40af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.7));
+    text-align: center;
+}
+
+.user-username {
+    font-size: 1.4rem;
+    color: #e2e8f0;
+    margin: 0 0 0.8rem 0;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.user-email {
+    font-size: 1.1rem;
+    color: #a0a9b4;
+    margin: 0;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .user-avatar {
+        width: 140px;
+        height: 140px;
+        border-width: 3px;
+        margin-bottom: 1.4rem;
+    }
+    
+    .user-name1 {
+        font-size: 2.4rem;
+        margin: 0;
+        text-align: center;
+    }
+    
+    .user-username {
+        font-size: 1.2rem;
+    }
+    
+    .user-email {
+        font-size: 1rem;
+    }
+}
