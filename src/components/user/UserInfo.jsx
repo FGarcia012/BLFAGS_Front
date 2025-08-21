@@ -2,9 +2,6 @@ import React from 'react';
 import './UserInfo.css';
 
 export const UserInfo = ({ user }) => {
-    console.log('UserInfo - Usuario completo:', user);
-    console.log('UserInfo - Nombre del usuario:', user?.name);
-    
     const getProfileImageUrl = (profilePicture) => {
         if (!profilePicture) return '/default-avatar.png';
         return `${profilePicture}`;

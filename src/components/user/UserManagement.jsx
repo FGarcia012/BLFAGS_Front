@@ -152,15 +152,6 @@ export const UserManagement = () => {
 
     return (
         <div className="user-settings">
-            <div className="settings-header">
-                <h2 className="settings-title">
-                    <Users size={24} />
-                    Gestión de Usuarios
-                </h2>
-                <p className="settings-subtitle">
-                    Administra los usuarios del sistema ({filteredUsers.length} usuarios)
-                </p>
-            </div>
 
             <div className="settings-content">
                 {message && (

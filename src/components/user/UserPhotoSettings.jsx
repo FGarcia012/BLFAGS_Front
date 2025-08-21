@@ -139,11 +139,6 @@ export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate
 
     return (
         <div className="user-settings">
-            <div className="settings-header">
-                <h2 className="settings-title">Foto de Perfil</h2>
-                <p className="settings-subtitle">Actualiza tu imagen de perfil</p>
-            </div>
-
             <div className="settings-content">
                 <form className="settings-form" onSubmit={handleSubmit}>
                     {message && (

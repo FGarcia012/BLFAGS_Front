@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { motion } from "framer-motion";
-import { User, Lock, Camera, Users, Settings } from 'lucide-react';
+import { User, Lock, Camera, Users, Trash2, Settings } from 'lucide-react';
 import { UserSettings } from '../../components/user/UserSettings';
 import { UserPasswordSettings } from '../../components/user/UserPasswordSettings';
 import { UserPhotoSettings } from '../../components/user/UserPhotoSettings';
 import { UserManagement } from '../../components/user/UserManagement';
+import { UserAccountSettings } from '../../components/user/UserAccountSettings';
 import { BackButton } from '../../components/BackButton/BackButton';
 import { getUserById } from '../../services/api';
 import './UserSettingsPageNew.css';
@@ -47,6 +48,7 @@ const UserSettingsPageNew = () => {
     const [targetUser, setTargetUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [profilePicture, setProfilePicture] = useState('');
+    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
         initializeUser();
@@ -59,6 +61,10 @@ const UserSettingsPageNew = () => {
             const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
             setCurrentUser(storedUser);
             
+            if (!storedUser || (!storedUser._id && !storedUser.uid)) {
+                return;
+            }
+            
             const targetUserId = userId || storedUser._id || storedUser.uid;
             
             if (!targetUserId) {
@@ -67,10 +73,6 @@ const UserSettingsPageNew = () => {
 
             const response = await getUserById(targetUserId);
             if (response.success) {
-                console.log('UserSettingsPageNew - Respuesta getUserById:', response);
-                console.log('UserSettingsPageNew - Usuario objetivo:', response.user);
-                console.log('UserSettingsPageNew - Nombre del usuario objetivo:', response.user?.name);
-                
                 setTargetUser(response.user);
                 setProfilePicture(response.user.profilePicture || '');
             }
@@ -78,6 +80,7 @@ const UserSettingsPageNew = () => {
             console.error('Error loading user:', error);
         } finally {
             setLoading(false);
+            setAuthChecked(true);
         }
     };
 
@@ -91,8 +94,33 @@ const UserSettingsPageNew = () => {
         }
     };
 
-    if (!loading && !currentUser?._id && !currentUser?.uid) {
+    if (authChecked && !currentUser?._id && !currentUser?.uid) {
         return <Navigate to="/auth" replace />;
+    }
+
+    // Si aún está cargando, mostrar loading
+    if (!authChecked || loading) {
+        return (
+            <div className="user-settings-page">
+                <div className="container">
+                    <motion.div 
+                        className="loading-container"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="loading-spinner"></div>
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            Cargando configuraciones...
+                        </motion.p>
+                    </motion.div>
+                </div>
+            </div>
+        );
     }
 
     const canManageUsers = currentUser?.role === 'ADMIN';
@@ -130,6 +158,12 @@ const UserSettingsPageNew = () => {
                     onPhotoUpdate={handlePhotoUpdate}
                 />
             )
+        },
+        {
+            id: 'account',
+            label: 'Cuenta',
+            icon: <Trash2 size={18} />,
+            component: <UserAccountSettings userId={targetUserId} />
         }
     ];
 
@@ -140,30 +174,6 @@ const UserSettingsPageNew = () => {
             icon: <Users size={18} />,
             component: <UserManagement />
         });
-    }
-
-    if (loading) {
-        return (
-            <div className="user-settings-page">
-                <div className="container">
-                    <motion.div 
-                        className="loading-container"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <div className="loading-spinner"></div>
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.2 }}
-                        >
-                            Cargando configuraciones...
-                        </motion.p>
-                    </motion.div>
-                </div>
-            </div>
-        );
     }
 
     return (

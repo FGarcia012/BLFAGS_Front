@@ -140,11 +140,6 @@ export const UserSettings = ({ userId }) => {
 
     return (
         <div className="user-settings">
-            <div className="settings-header">
-                <h2 className="settings-title">Configuración de Usuario</h2>
-                <p className="settings-subtitle">Actualiza tu información personal</p>
-            </div>
-
             <div className="settings-content">
                 <form className="settings-form" onSubmit={handleSubmit}>
                     {message && (

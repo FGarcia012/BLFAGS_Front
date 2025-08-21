@@ -3,7 +3,6 @@ import { AuthPage } from "./pages/auth/AuthPage";
 import { RegisterPage } from "./pages/register/RegisterPage";
 import { PublicationsPage } from "./pages/publications/PublicationsPage";
 import { UserProfilePage } from "./pages/user/UserProfilePage";
-import { UserSettingsPage } from "./pages/user/UserSettingsPage";
 import UserSettingsPageNew from "./pages/user/UserSettingsPageNew";
 
 export const routes = [
@@ -12,7 +11,7 @@ export const routes = [
     {path: '/register', element: <RegisterPage/>},
     {path: '/publications', element: <PublicationsPage/>},
     {path: '/profile/:userId', element: <UserProfilePage/>},
-    {path: '/user/:userId/settings', element: <UserSettingsPage/>},
+    {path: '/user/:userId/settings', element: <UserSettingsPageNew/>},
     {path: '/settings', element: <UserSettingsPageNew/>},
     {path: '/admin/settings/:userId', element: <UserSettingsPageNew/>}
 ]

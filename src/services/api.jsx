@@ -181,10 +181,9 @@ export const getUserById = async (id) => {
     }
 }
 
-
 export const deleteUser = async (id) => {
     try {
-        const response = await apiClient.put(`/user/deleteUser/${id}`);
+        const response = await apiClient.delete(`/user/deleteUser/${id}`);
         return response.data;
     } catch (e) {
         return {

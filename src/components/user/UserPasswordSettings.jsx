@@ -108,11 +108,6 @@ export const UserPasswordSettings = ({ userId }) => {
                     newPassword: ''
                 });
                 
-                if (response.adminNotified) {
-                    setTimeout(() => {
-                        setMessage(prev => prev + ' (Administrador notificado)');
-                    }, 1000);
-                }
             } else {
                 setMessage('❌ ' + (response.message || 'Error al actualizar la contraseña'));
             }
@@ -127,11 +122,6 @@ export const UserPasswordSettings = ({ userId }) => {
 
     return (
         <div className="user-settings">
-            <div className="settings-header">
-                <h2 className="settings-title">Cambiar Contraseña</h2>
-                <p className="settings-subtitle">Actualiza tu contraseña para mayor seguridad</p>
-            </div>
-
             <div className="settings-content">
                 <form className="settings-form" onSubmit={handleSubmit}>
                     {message && (
