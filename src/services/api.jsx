@@ -139,9 +139,9 @@ export const updatePassword = async (id, data) => {
     }
 }
 
-export const updateProfilePicture = async (id, data) => {
+export const updateProfilePicture = async (id, formData) => {
     try {
-        const response = await apiClient.put(`/user/updateProfilePicture/${id}`, data, {
+        const response = await apiClient.patch(`/user/updateProfilePicture/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -150,6 +150,7 @@ export const updateProfilePicture = async (id, data) => {
     } catch (e) {
         return {
             error: true,
+            message: e.response?.data?.message || 'Error al actualizar la foto de perfil',
             e
         }
     }
@@ -183,10 +184,12 @@ export const getUserById = async (id) => {
 
 export const deleteUser = async (id) => {
     try {
-        return await apiClient.delete(`/user/deleteUser/${id}`);
+        const response = await apiClient.put(`/user/deleteUser/${id}`);
+        return response.data;
     } catch (e) {
         return {
             error: true,
+            message: e.response?.data?.message || 'Error al eliminar usuario',
             e
         }
     }

@@ -12,6 +12,7 @@ import {
   validateUsernameMessage,
   validatePasswordMessage
 } from "../shared/validators";
+import { BackButton } from './BackButton/BackButton';
 
 const shootingStarColors = ["#1e40af", "#3b82f6", "#60a5fa"];
 const particleColors = ["#1e40af", "#3b82f6", "#60a5fa", "#93c5fd"];
@@ -192,6 +193,16 @@ export const Register = ({ switchAuthHandler }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4 py-8 relative overflow-hidden">
+      {/* Botón de volver al inicio */}
+      <div className="absolute top-6 left-6 z-20">
+        <BackButton 
+          to="/" 
+          text="Volver al Inicio" 
+          icon="home" 
+          variant="outline"
+        />
+      </div>
+
       {/* Partículas animadas */}
       {particlesArray.map((_, i) => {
         const size = Math.random() * 3 + 1;
