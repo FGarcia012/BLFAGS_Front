@@ -43,10 +43,178 @@ export const login = async (data) => {
     return await apiClient.post('/auth/login', data);
 };
 
+export const addPublications = async (data) => {
+    try {
+        const response = await apiClient.post(`/publication/addPublication`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const updatePublication = async (id, data) => {
+    try {
+        const response = await apiClient.put(`/publication/updatePublication/${id}`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const deletePublication = async (id) => {
+    try {
+        const response = await apiClient.delete(`/publication/deletePublication/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
 export const getPublications = async () => {
     try {
         const response = await apiClient.get(`/publication/getPublications`)
         return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getPublicationById = async (id) => {
+    try {
+        const response = await apiClient.get(`/publication/getPublication/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getPublicationsByUser = async (id) => {
+    try {
+        const response = await apiClient.get(`/publication/user/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const updateUser = async (id, data) => {
+    try {
+        const response = await apiClient.put(`/user/updateUser/${id}`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const updatePassword = async (id, data) => {
+    try {
+        const response = await apiClient.put(`/user/updatePassword/${id}`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const updateProfilePicture = async (id, data) => {
+    try {
+        const response = await apiClient.put(`/user/updateProfilePicture/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+// Solo el administrador puede acceder
+export const getUsers = async () => {
+    try {
+        const response = await apiClient.get(`/user/getUsers`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        };
+    }
+}
+
+export const getUserById = async (id) => {
+    try {
+        const response = await apiClient.get(`/user/getUser/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+
+export const deleteUser = async (id) => {
+    try {
+        return await apiClient.delete(`/user/deleteUser/${id}`);
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getUserStats = async (id) => {
+    try {
+        const [userResponse, publicationsResponse] = await Promise.all([
+            apiClient.get(`/user/getUser/${id}`),
+            apiClient.get(`/publication/user/${id}`)
+        ]);
+        
+        const user = userResponse.data.user;
+        const publications = publicationsResponse.data.publications || [];
+        
+        const totalLikes = publications.reduce((total, pub) => {
+            return total + (pub.reactionCount?.total || 0);
+        }, 0);
+        
+        return {
+            success: true,
+            user,
+            stats: {
+                totalPublications: publications.length,
+                totalLikes,
+                publications
+            }
+        };
     } catch (e) {
         return {
             error: true,

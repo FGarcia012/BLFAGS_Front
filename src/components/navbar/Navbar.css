@@ -7,6 +7,8 @@
   top: 0;
   z-index: 100;
   width: 100%;
+  height: 90px; /* Altura fija para el navbar */
+  overflow: visible; /* Permitir que el dropdown se muestre */
 }
 
 .navbar-container {
@@ -16,7 +18,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
+  height: 100%;
 }
 
 /* Brand Section */
@@ -134,17 +136,19 @@
 .user-button {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   background: white;
   border: 2px solid #1976d2;
-  border-radius: 30px;
-  padding: 10px 24px 10px 10px;
+  border-radius: 25px;
+  padding: 8px 20px 8px 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   color: #1976d2;
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
-  font-size: 1rem;
+  font-size: 0.9rem;
+  height: 56px; 
+  max-width: 200px; 
 }
 
 .user-button:hover {
@@ -155,8 +159,8 @@
 }
 
 .user-avatar {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #1976d2;
@@ -164,6 +168,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+  flex-shrink: 0; 
 }
 
 .avatar-image {
@@ -185,8 +190,12 @@
 }
 
 .user-name {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #1565c0;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 120px;
 }
 
 .dropdown-arrow {
@@ -327,9 +336,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .navbar {
+    height: 70px; 
+  }
+  
   .navbar-container {
     padding: 0 20px;
-    height: 85px;
+    height: 100%;
   }
 
   .navbar-nav {
@@ -341,26 +354,29 @@
   }
 
   .navbar-logo {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .navbar-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .user-button {
-    padding: 8px 18px 8px 8px;
-    gap: 12px;
+    padding: 6px 16px 6px 6px;
+    gap: 10px;
+    height: 48px;
+    max-width: 160px;
   }
 
   .user-avatar {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
   }
 
   .user-name {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    max-width: 100px;
   }
 
   .dropdown-menu {
@@ -379,21 +395,33 @@
 }
 
 @media (max-width: 480px) {
+  .navbar {
+    height: 60px;
+  }
+  
   .navbar-container {
     padding: 0 15px;
-    height: 75px;
+    height: 100%;
   }
 
   .navbar-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .user-name {
-    display: none;
+    display: none; /* Ocultar texto en pantallas muy pequeñas */
   }
 
   .user-button {
-    padding: 8px;
+    padding: 6px;
+    gap: 0;
+    height: 44px;
+    max-width: 44px; /* Solo mostrar avatar */
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
   }
 
   .auth-buttons-nav {

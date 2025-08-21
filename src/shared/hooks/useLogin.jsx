@@ -21,21 +21,36 @@ export const useLogin = () => {
 
       const response = await login(loginData);
 
-      const userDetails = response.data?.userDetails;
+      let userDetails, token;
+      
+      if (response.data?.userDetails?.token) {
+        userDetails = response.data.userDetails;
+        token = userDetails.token;
+        const { token: _, ...userWithoutToken } = userDetails;
+        userDetails = userWithoutToken;
+      } else {
+        userDetails = response.data?.userDetails;
+        token = response.data?.token;
+      }
 
       if (!userDetails) {
         toast.error("Detalles del usuario no encontrados en la respuesta.");
         return;
       }
 
+      if (!token) {
+        toast.error("Token de autenticación no encontrado en la respuesta.");
+        return;
+      }
+
+      const userToSave = {
+        ...userDetails,
+        token: token
+      };
+
       toast.success(response.data.message || "Inicio de sesión exitoso");
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...userDetails,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userToSave));
 
       navigate("/publications", { replace: true });
 

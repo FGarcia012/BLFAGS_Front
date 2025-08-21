@@ -1,0 +1,28 @@
+import React from 'react';
+import './UserInfo.css';
+
+export const UserInfo = ({ user }) => {
+    const getProfileImageUrl = (profilePicture) => {
+        if (!profilePicture) return '/default-avatar.png';
+        return `${profilePicture}`;
+    };
+
+    return (
+        <div className="user-info">
+            <div className="user-avatar">
+                <img 
+                    src={getProfileImageUrl(user.profilePicture)} 
+                    alt={`${user.name} profile`}
+                    onError={(e) => {
+                        e.target.src = '/default-avatar.png';
+                    }}
+                />
+            </div>
+            <div className="user-details">
+                <h2 className="user-name">{user.name}</h2>
+                <p className="user-username">@{user.username}</p>
+                <p className="user-email">{user.email}</p>
+            </div>
+        </div>
+    );
+};
