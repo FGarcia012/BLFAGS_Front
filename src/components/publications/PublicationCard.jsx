@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { validateText } from "../../shared/validators/validateText";
+import { PublicationActions } from "./PublicationActions";
 
-export const PublicationCard = ({ publication, onSelect, isSelected = false }) => {
+export const PublicationCard = ({ 
+  publication, 
+  onSelect, 
+  isSelected = false, 
+  onEdit,
+  onDelete 
+}) => {
   const [mediaError, setMediaError] = useState(false);
 
   const handleImageError = () => {
@@ -139,7 +146,6 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
       className={`publication-card ${isSelected ? 'selected' : ''}`}
       onClick={() => onSelect && onSelect(publication)}
     >
-      {/* Header con usuario y fecha primero */}
       <div className="publication-header">
         <div className="user-info">
           <img
@@ -153,19 +159,24 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
             <span className="publication-date">{formatDate(publication.createdAt)}</span>
           </div>
         </div>
-        <div className="visibility-indicator">
-          <span className={`visibility ${publication.visibility}`}>
-            {publication.visibility === 'public' ? '🌍' : '🔒'}
-          </span>
+        <div className="header-actions">
+          <div className="visibility-indicator">
+            <span className={`visibility ${publication.visibility}`}>
+              {publication.visibility === 'public' ? '🌍' : '🔒'}
+            </span>
+          </div>
+          <PublicationActions 
+            publication={publication}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         </div>
       </div>
 
-      {/* Renderizar media después del contenido de texto */}
       <div className="media-container">
         {renderMedia()}
       </div>
 
-      {/* Título de la publicación */}
       <div className="publication-content">
         {publication.title && (
           <h3 className="publication-title">
@@ -173,7 +184,6 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
           </h3>
         )}
 
-        {/* Descripción */}
         {publication.description && (
           <div>
             <p className="publication-description">
@@ -182,16 +192,13 @@ export const PublicationCard = ({ publication, onSelect, isSelected = false }) =
           </div>
         )}
 
-        {/* Hashtags */}
         {renderHashtags()}
       </div>
 
-      {/* Footer con estadísticas */}
       <div className="publication-footer">
         {renderStats()}
       </div>
 
-      {/* Comentarios al final */}
       {renderComments()}
     </div>
   );

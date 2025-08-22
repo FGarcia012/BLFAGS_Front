@@ -145,13 +145,11 @@ export const UserProfile = ({ userId = null }) => {
                     </h3>
                 </div>
 
-                {/* Componente para agregar publicaciones - solo visible para el dueño del perfil */}
                 <AddPublication 
                     onPublicationAdded={handlePublicationAdded}
                     isOwnProfile={canCreatePublications}
                 />
 
-                {/* Filtro de visibilidad - visible para el dueño del perfil o administradores */}
                 <PublicationFilter 
                     visibilityFilter={visibilityFilter}
                     onVisibilityChange={handleVisibilityChange}
@@ -161,11 +159,10 @@ export const UserProfile = ({ userId = null }) => {
                     canSeeFilters={canSeeFilters}
                 />
 
-                {/* Lista de publicaciones filtradas */}
                 {filteredPublications.length > 0 ? (
                     <PublicationList 
                         publications={filteredPublications}
-                        onPublicationUpdate={refreshProfile}
+                        onRefresh={refreshProfile}
                     />
                 ) : (
                     <div className="no-publications">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Image, X } from 'lucide-react';
 import { addPublications } from '../../services/api';
+import { usePublicationsRefresh } from '../../contexts/PublicationsRefreshContext';
 import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
 import './AddPublication.css';
 
@@ -15,6 +16,7 @@ export const AddPublication = ({ onPublicationAdded, isOwnProfile = false }) => 
     const [mediaPreview, setMediaPreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const { onPublicationAdded: triggerGlobalRefresh } = usePublicationsRefresh();
 
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     
@@ -107,6 +109,8 @@ export const AddPublication = ({ onPublicationAdded, isOwnProfile = false }) => 
             if (onPublicationAdded) {
                 onPublicationAdded();
             }
+            
+            triggerGlobalRefresh();
 
         } catch (err) {
             setError(err.message);

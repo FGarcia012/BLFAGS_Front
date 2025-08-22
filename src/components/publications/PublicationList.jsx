@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PublicationCard } from "./PublicationCard";
+import { EditPublication } from "./EditPublication";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 
 export const PublicationList = ({ 
@@ -9,11 +10,35 @@ export const PublicationList = ({
   onRefresh = null 
 }) => {
   const [selectedPublication, setSelectedPublication] = useState(null);
+  const [editingPublication, setEditingPublication] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handlePublicationSelect = (publication) => {
     setSelectedPublication(
       selectedPublication?.pid === publication.pid ? null : publication
     );
+  };
+
+  const handleEdit = (publication) => {
+    setEditingPublication(publication);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (publication) => {
+    if (onRefresh) {
+      onRefresh();
+    }
+  };
+
+  const handlePublicationUpdated = (updatedPublication) => {
+    if (onRefresh) {
+      onRefresh();
+    }
+  };
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingPublication(null);
   };
 
   if (isLoading) {
@@ -78,6 +103,8 @@ export const PublicationList = ({
             publication={publication}
             onSelect={handlePublicationSelect}
             isSelected={selectedPublication?._id === publication._id || selectedPublication?.pid === publication.pid}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         ))}
       </div>
@@ -94,10 +121,19 @@ export const PublicationList = ({
             <PublicationCard
               publication={selectedPublication}
               isSelected={true}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           </div>
         </div>
       )}
+
+      <EditPublication
+        publication={editingPublication}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        onPublicationUpdated={handlePublicationUpdated}
+      />
     </div>
   );
 };

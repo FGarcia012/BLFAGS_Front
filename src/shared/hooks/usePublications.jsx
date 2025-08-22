@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { getPublications } from "../../services/api";
+import { usePublicationsRefresh } from "../../contexts/PublicationsRefreshContext";
 import toast from "react-hot-toast";
 
 export const usePublications = () => {
   const [publications, setPublications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { subscribe } = usePublicationsRefresh();
 
   const fetchPublications = async () => {
     try {
@@ -15,8 +17,7 @@ export const usePublications = () => {
       const response = await getPublications();
 
       if (response.error) {
-        // Si el error es de autenticación, continuamos sin mostrar error
-        // ya que las publicaciones públicas deberían ser visibles sin auth
+
         if (response.e?.response?.status === 401) {
           setPublications([]);
           return;
@@ -52,7 +53,11 @@ export const usePublications = () => {
 
   useEffect(() => {
     fetchPublications();
-  }, []);
+    
+    const unsubscribe = subscribe(fetchPublications);
+    
+    return unsubscribe;
+  }, [subscribe]);
 
   return {
     publications,
