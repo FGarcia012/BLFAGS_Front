@@ -176,9 +176,6 @@ export const Register = ({ switchAuthHandler }) => {
         profilePicture: formState.profilePicture.value
       });
       
-      if (response) {
-        console.log(":", response);
-      }
     } catch (error) {
       console.error("Registration error:", error);
     }

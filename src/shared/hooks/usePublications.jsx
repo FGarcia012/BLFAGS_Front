@@ -3,25 +3,34 @@ import { getPublications } from "../../services/api";
 import { usePublicationsRefresh } from "../../contexts/PublicationsRefreshContext";
 import toast from "react-hot-toast";
 
-export const usePublications = () => {
+export const usePublications = (initialSearchTerm = '') => {
   const [publications, setPublications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const { subscribe } = usePublicationsRefresh();
 
-  const fetchPublications = async () => {
+  const fetchPublications = async (search = searchTerm) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await getPublications();
+      const userDetails = localStorage.getItem("user");
+      const user = userDetails ? JSON.parse(userDetails) : null;
+
+      const response = await getPublications(search);
 
       if (response.error) {
-
         if (response.e?.response?.status === 401) {
           setPublications([]);
           return;
         }
+        
+        if (response.e?.response?.status === 404) {
+          setPublications([]);
+          return;
+        }
+        
         throw new Error(response.e?.response?.data?.message || "Error al obtener las publicaciones");
       }
 
@@ -32,8 +41,7 @@ export const usePublications = () => {
       }
 
     } catch (error) {
-      // Solo mostrar error si no es un problema de autenticación
-      if (error?.response?.status !== 401) {
+      if (error?.response?.status !== 401 && error?.response?.status !== 404) {
         const errorMessage = error?.response?.data?.message || 
                             error?.message || 
                             "Error al cargar las publicaciones";
@@ -48,13 +56,18 @@ export const usePublications = () => {
   };
 
   const refreshPublications = () => {
-    fetchPublications();
+    fetchPublications(searchTerm);
+  };
+
+  const handleSearch = (newSearchTerm) => {
+    setSearchTerm(newSearchTerm);
+    fetchPublications(newSearchTerm);
   };
 
   useEffect(() => {
     fetchPublications();
     
-    const unsubscribe = subscribe(fetchPublications);
+    const unsubscribe = subscribe(() => fetchPublications(searchTerm));
     
     return unsubscribe;
   }, [subscribe]);
@@ -63,7 +76,9 @@ export const usePublications = () => {
     publications,
     isLoading,
     error,
+    searchTerm,
     refreshPublications,
-    fetchPublications
+    fetchPublications,
+    handleSearch
   };
 };

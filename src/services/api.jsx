@@ -79,9 +79,32 @@ export const deletePublication = async (id) => {
     }
 }
 
-export const getPublications = async () => {
+export const getPublications = async (searchTerm = '') => {
     try {
-        const response = await apiClient.get(`/publication/getPublications`)
+        const publicationsClient = axios.create({
+            baseURL: "http://localhost:3020/BLFAGS/v1/",
+            timeout: 30000,
+        });
+
+        const userDetails = localStorage.getItem("user");
+        const headers = {};
+        
+        if (userDetails) {
+            try {
+                const parsedUser = JSON.parse(userDetails);
+                if (parsedUser?.token) {
+                    headers.Authorization = `Bearer ${parsedUser.token}`;
+                }
+            } catch (err) {
+                console.warn("Error al leer el token:", err);
+            }
+        }
+
+        const url = searchTerm 
+            ? `/publication/getPublications?search=${encodeURIComponent(searchTerm)}`
+            : `/publication/getPublications`;
+            
+        const response = await publicationsClient.get(url, { headers });
         return response.data;
     } catch (e) {
         return {
@@ -206,7 +229,6 @@ export const getUserStats = async (id) => {
             const publicationsResponse = await apiClient.get(`/publication/user/${id}`);
             publications = publicationsResponse.data.publications || [];
         } catch (publicationError) {
-            console.log('Usuario sin publicaciones o error al obtenerlas:', publicationError.response?.status);
             publications = [];
         }
         

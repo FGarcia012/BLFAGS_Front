@@ -35,17 +35,14 @@ export const PublicationsRefreshProvider = ({ children }) => {
   }, [subscribers]);
 
   const onPublicationAdded = useCallback(() => {
-    console.log('📝 Nueva publicación agregada - actualizando listas...');
     triggerGlobalRefresh();
   }, [triggerGlobalRefresh]);
 
   const onPublicationUpdated = useCallback(() => {
-    console.log('✏️ Publicación actualizada - actualizando listas...');
     triggerGlobalRefresh();
   }, [triggerGlobalRefresh]);
 
   const onPublicationDeleted = useCallback(() => {
-    console.log('🗑️ Publicación eliminada - actualizando listas...');
     triggerGlobalRefresh();
   }, [triggerGlobalRefresh]);
 
