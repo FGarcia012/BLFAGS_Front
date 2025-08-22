@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { validateText } from "../../shared/validators/validateText";
 import { PublicationActions } from "./PublicationActions";
+import { CommentsList, CommentsToggle } from "../comments";
 
 export const PublicationCard = ({ 
   publication, 
@@ -10,6 +11,7 @@ export const PublicationCard = ({
   onDelete 
 }) => {
   const [mediaError, setMediaError] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const handleImageError = () => {
     setMediaError(true);
@@ -51,59 +53,15 @@ export const PublicationCard = ({
     );
   };
   const renderComments = () => {
-    if (!publication.comments || publication.comments.length === 0) return null;
     return (
-      <div className="publication-comments">
-        <h4 className="comments-title">Comentarios</h4>
-        {publication.comments.map((comment) => (
-          <div className="comment-item" key={comment._id || comment.cid}>
-            <div className="comment-user-info">
-              <img
-                src={comment.user?.profilePicture || `https://ui-avatars.com/api/?name=${comment.user?.username || 'U'}`}
-                alt={comment.user?.username || 'Usuario'}
-                className="comment-avatar"
-              />
-              <span className="comment-username">@{comment.user?.username || 'Usuario'}</span>
-              <span className="comment-date">{formatDate(comment.createdAt)}</span>
-            </div>
-            {comment.text && (
-              <div className="comment-text">{comment.text}</div>
-            )}
-            {comment.media && (
-              <div style={{ marginLeft: '38px', marginTop: '8px' }}>
-                {/\.(mp4|webm|ogg)$/i.test(comment.media) ? (
-                  <video 
-                    src={comment.media} 
-                    controls 
-                    className="comment-media"
-                    style={{ 
-                      maxWidth: '350px', 
-                      maxHeight: '250px', 
-                      width: 'auto',
-                      height: 'auto',
-                      borderRadius: '12px',
-                      objectFit: 'cover'
-                    }} 
-                  />
-                ) : (
-                  <img 
-                    src={comment.media} 
-                    alt="media" 
-                    className="comment-media"
-                    style={{ 
-                      maxWidth: '350px', 
-                      maxHeight: '250px', 
-                      width: 'auto',
-                      height: 'auto',
-                      borderRadius: '12px',
-                      objectFit: 'cover'
-                    }} 
-                  />
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+      <div className="publication-comments-section">
+        {showComments && (
+          <CommentsList 
+            publicationId={publication.pid || publication._id}
+            publication={publication}
+            showAddComment={true}
+          />
+        )}
       </div>
     );
   };
@@ -123,9 +81,8 @@ export const PublicationCard = ({
   };
 
   const renderStats = () => {
-    const { reactionCount = {}, comments = [] } = publication;
+    const { reactionCount = {} } = publication;
     const totalReactions = reactionCount.total || 0;
-    const commentsCount = comments.length || 0;
 
     return (
       <div className="publication-stats">
@@ -133,10 +90,11 @@ export const PublicationCard = ({
           <span className="stat-icon">❤️</span>
           <span className="stat-count">{totalReactions}</span>
         </div>
-        <div className="stat-item">
-          <span className="stat-icon">💬</span>
-          <span className="stat-count">{commentsCount}</span>
-        </div>
+        <CommentsToggle 
+          publicationId={publication.pid || publication._id}
+          onToggle={setShowComments}
+          showCount={true}
+        />
       </div>
     );
   };

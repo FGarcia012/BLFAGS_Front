@@ -55,6 +55,18 @@ export const addPublications = async (data) => {
     }
 }
 
+export const addComments = async (data) => {
+    try {
+        const response = await apiClient.post(`/comment/addComment`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
 export const updatePublication = async (id, data) => {
     try {
         const response = await apiClient.put(`/publication/updatePublication/${id}`, data);
@@ -70,6 +82,18 @@ export const updatePublication = async (id, data) => {
 export const deletePublication = async (id) => {
     try {
         const response = await apiClient.delete(`/publication/deletePublication/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const deleteComment = async (id) => {
+    try {
+        const response = await apiClient.delete(`/comment/deleteComment/${id}`);
         return response.data;
     } catch (e) {
         return {
@@ -105,6 +129,42 @@ export const getPublications = async (searchTerm = '') => {
             : `/publication/getPublications`;
             
         const response = await publicationsClient.get(url, { headers });
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getComments = async () => {
+    try {
+        const response = await apiClient.get(`/comment/getComments`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getCommentsById = async (id) => {
+    try {
+        const response = await apiClient.get(`/comment/getComment/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getCommentsByPublication = async (id) => {
+    try {
+        const response = await apiClient.get(`/comment/publication/${id}`);
         return response.data;
     } catch (e) {
         return {

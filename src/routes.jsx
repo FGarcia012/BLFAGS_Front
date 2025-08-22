@@ -4,6 +4,7 @@ import { RegisterPage } from "./pages/register/RegisterPage";
 import { PublicationsPage } from "./pages/publications/PublicationsPage";
 import { UserProfilePage } from "./pages/user/UserProfilePage";
 import UserSettingsPageNew from "./pages/user/UserSettingsPageNew";
+import CommentsExamplePage from "./pages/comments/CommentsExamplePage";
 
 export const routes = [
     {path: '/*', element: <HomePage/>},
@@ -13,5 +14,6 @@ export const routes = [
     {path: '/profile/:userId', element: <UserProfilePage/>},
     {path: '/user/:userId/settings', element: <UserSettingsPageNew/>},
     {path: '/settings', element: <UserSettingsPageNew/>},
-    {path: '/admin/settings/:userId', element: <UserSettingsPageNew/>}
+    {path: '/admin/settings/:userId', element: <UserSettingsPageNew/>},
+    {path: '/comments-example', element: <CommentsExamplePage/>}
 ]
