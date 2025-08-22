@@ -12,7 +12,6 @@ export const PublicationsPage = () => {
     refreshPublications
   } = usePublications();
 
-  // Verificar si el usuario está autenticado
   const isAuthenticated = () => {
     const userDetails = localStorage.getItem("user");
     return userDetails && JSON.parse(userDetails)?.token;

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Plus, Image, X } from 'lucide-react';
 import { addPublications } from '../../services/api';
 import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
-import { debugLog } from '../../shared/utils/debug';
 import './AddPublication.css';
 
 export const AddPublication = ({ onPublicationAdded, isOwnProfile = false }) => {
@@ -90,17 +89,7 @@ export const AddPublication = ({ onPublicationAdded, isOwnProfile = false }) => 
                 submitData.append('media', mediaFile);
             }
 
-            debugLog('📤 Sending publication data:', {
-                title: formData.title.trim(),
-                description: formData.description.trim(),
-                user: getCurrentUserId(),
-                visibility: formData.visibility,
-                hasMedia: !!mediaFile
-            });
-
             const response = await addPublications(submitData);
-
-            debugLog('📥 Publication response:', response);
 
             if (response.error) {
                 throw new Error(response.e?.response?.data?.message || 'Error al crear la publicación');

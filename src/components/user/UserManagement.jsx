@@ -479,7 +479,7 @@ export const UserManagement = () => {
                                         fontSize: '12px',
                                         color: '#1f2937',
                                         marginLeft: '8px'
-                                    }}>{selectedUser._id}</code>
+                                    }}>{selectedUser.uid}</code>
                                 </div>
                             </div>
                             

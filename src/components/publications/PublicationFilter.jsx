@@ -8,10 +8,11 @@ export const PublicationFilter = ({
     onVisibilityChange, 
     isOwnProfile = false,
     publicationsCount = { public: 0, private: 0, total: 0 },
-    isAdminView = false
+    isAdminView = false,
+    canSeeFilters = false
 }) => {
     
-    if (!isOwnProfile) {
+    if (!isOwnProfile && !isAdminView && !canSeeFilters) {
         return null;
     }
 

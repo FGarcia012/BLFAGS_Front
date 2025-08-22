@@ -8,7 +8,6 @@ import { PublicationList } from '../../components/publications/PublicationList';
 import { AddPublication } from '../../components/publications/AddPublication';
 import { PublicationFilter } from '../../components/publications/PublicationFilter';
 import { LoadingSpinner } from '../../components/LoadingSpinner/LoadingSpinner';
-import { debugLog } from '../../shared/utils/debug';
 import './UserProfile.css';
 
 export const UserProfile = ({ userId = null }) => {
@@ -34,46 +33,28 @@ export const UserProfile = ({ userId = null }) => {
     const canCreatePublications = isOwnProfile;
 
     const filteredPublications = useMemo(() => {
-        console.log('🔍 Filtering publications:', {
-            totalPublications: stats.publications?.length || 0,
-            visibilityFilter,
-            isOwnProfile,
-            isAdmin,
-            publications: stats.publications?.map(pub => ({
-                id: pub.pid || pub._id,
-                title: pub.title,
-                visibility: pub.visibility || 'public'
-            }))
-        });
-
         if (!stats.publications) return [];
         
         if (!isOwnProfile && !isAdmin) {
-            const publicOnly = stats.publications.filter(pub => 
+            return stats.publications.filter(pub => 
                 pub.visibility === 'public' || !pub.visibility
             );
-                        console.log('👀 Showing public only:', publicOnly.length);
-            return publicOnly;
         }
         
         switch (visibilityFilter) {
             case 'public':
-                const publicFiltered = stats.publications.filter(pub => 
+                return stats.publications.filter(pub => 
                     pub.visibility === 'public' || !pub.visibility
                 );
-                debugLog('🌍 Public filtered:', publicFiltered.length);
-                return publicFiltered;
             case 'private':
-                const privateFiltered = stats.publications.filter(pub => 
+                return stats.publications.filter(pub => 
                     pub.visibility === 'private'
                 );
-                debugLog('🔒 Private filtered:', privateFiltered.length);
-                return privateFiltered;
             default:
-                debugLog('📋 All publications:', stats.publications.length);
+                return stats.publications;
                 return stats.publications;
         }
-    }, [stats.publications, visibilityFilter, isOwnProfile, isAdmin]);
+    }, [stats.publications, visibilityFilter, isOwnProfile, isAdmin, currentUserId, userProfile]);
 
     const publicationsCount = useMemo(() => {
         if (!stats.publications) return { public: 0, private: 0, total: 0 };
@@ -91,8 +72,6 @@ export const UserProfile = ({ userId = null }) => {
             private: private_,
             total: stats.publications.length
         };
-        
-        debugLog('📊 Publications count:', counts);
         
         return counts;
     }, [stats.publications]);
@@ -176,9 +155,10 @@ export const UserProfile = ({ userId = null }) => {
                 <PublicationFilter 
                     visibilityFilter={visibilityFilter}
                     onVisibilityChange={handleVisibilityChange}
-                    isOwnProfile={canSeeFilters}
+                    isOwnProfile={isOwnProfile}
                     publicationsCount={publicationsCount}
                     isAdminView={isAdmin && !isOwnProfile}
+                    canSeeFilters={canSeeFilters}
                 />
 
                 {/* Lista de publicaciones filtradas */}
