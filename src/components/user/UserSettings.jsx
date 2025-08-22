@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { User, Save } from 'lucide-react';
 import { getUserById, updateUser } from '../../services/api';
+import { useUser } from '../../contexts/UserContext';
 import './UserSettings.css';
 
 export const UserSettings = ({ userId }) => {
+    const { updateUserData } = useUser();
     const [formData, setFormData] = useState({
         name: '',
         username: '',
@@ -88,24 +90,8 @@ export const UserSettings = ({ userId }) => {
                     ...formData
                 }));
                 
-                try {
-                    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-                    if (currentUser.user?.uid === userId || currentUser._id === userId) {
-                        const updatedUser = {
-                            ...currentUser,
-                            user: currentUser.user ? {
-                                ...currentUser.user,
-                                ...formData
-                            } : { ...formData, uid: userId },
-                            name: formData.name || currentUser.name,
-                            username: formData.username || currentUser.username,
-                            email: formData.email || currentUser.email
-                        };
-                        localStorage.setItem('user', JSON.stringify(updatedUser));
-                    }
-                } catch (localStorageError) {
-                    console.warn('Error updating localStorage:', localStorageError);
-                }
+                // Actualizar el contexto global del usuario (sin mensaje de éxito automático)
+                updateUserData(formData, false);
                 
                 setMessage('✓ Perfil actualizado correctamente');
             } else {

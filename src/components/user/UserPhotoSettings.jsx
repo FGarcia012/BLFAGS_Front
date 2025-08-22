@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Save, User } from 'lucide-react';
 import { updateProfilePicture, getUserById } from '../../services/api';
+import { useUser } from '../../contexts/UserContext';
 import './UserSettings.css';
 
 export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate }) => {
+    const { updateUserData } = useUser();
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,22 +100,8 @@ export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate
                     onPhotoUpdate(response.user.profilePicture);
                 }
                 
-                try {
-                    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-                    if (currentUser.user?.uid === userId || currentUser._id === userId) {
-                        const updatedUser = {
-                            ...currentUser,
-                            user: currentUser.user ? {
-                                ...currentUser.user,
-                                profilePicture: response.user.profilePicture
-                            } : { profilePicture: response.user.profilePicture },
-                            profilePicture: response.user.profilePicture
-                        };
-                        localStorage.setItem('user', JSON.stringify(updatedUser));
-                    }
-                } catch (localStorageError) {
-                    console.warn('Error updating localStorage:', localStorageError);
-                }
+                // Actualizar el contexto global del usuario (sin mensaje de éxito automático)
+                updateUserData({ profilePicture: response.user.profilePicture }, false);
                 
                 clearSelection();
             } else {

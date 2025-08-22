@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/api";
+import { useUser } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { login: contextLogin } = useUser();
   const navigate = useNavigate();
 
   const loginUser = async ({ email, username, password }) => {
@@ -50,7 +52,8 @@ export const useLogin = () => {
 
       toast.success(response.data.message || "Inicio de sesión exitoso");
 
-      localStorage.setItem("user", JSON.stringify(userToSave));
+      // Usar el contexto para manejar el login
+      contextLogin(userToSave);
 
       navigate("/publications", { replace: true });
 

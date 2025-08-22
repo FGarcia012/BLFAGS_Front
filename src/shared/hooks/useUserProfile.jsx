@@ -41,11 +41,15 @@ export const useUserProfile = (userId) => {
             const response = await getUserStats(targetUserId);
             
             if (response.error) {
-                throw new Error(response.e?.response?.data?.message || 'Error al cargar el perfil');
+                throw new Error(response.e?.response?.data?.message || 'Usuario no encontrado');
             }
             
             setUserProfile(response.user);
-            setStats(response.stats);
+            setStats(response.stats || {
+                totalPublications: 0,
+                totalLikes: 0,
+                publications: []
+            });
         } catch (err) {
             setError(err.message);
         } finally {

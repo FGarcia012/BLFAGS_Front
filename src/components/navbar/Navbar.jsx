@@ -1,31 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext.jsx";
 import "./Navbar.css";
 
 export const Navbar = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated, logout: contextLogout, getUserInitials } = useUser();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const isAuthenticated = () => {
-    const userDetails = localStorage.getItem("user");
-    return userDetails && JSON.parse(userDetails)?.token;
-  };
-
-  const getUserInfo = () => {
-    const userDetails = localStorage.getItem("user");
-    if (userDetails) {
-      try {
-        return JSON.parse(userDetails);
-      } catch (error) {
-        return null;
-      }
-    }
-    return null;
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    contextLogout();
     setIsProfileMenuOpen(false);
     navigate("/", { replace: true });
   };
@@ -45,8 +30,6 @@ export const Navbar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isProfileMenuOpen]);
-
-  const user = getUserInfo();
 
   return (
     <nav className="navbar">
@@ -100,13 +83,13 @@ export const Navbar = () => {
 
         {/* Menú de usuario */}
         <div className="navbar-user" ref={dropdownRef}>
-          {isAuthenticated() && user ? (
+          {isAuthenticated && user ? (
             <div className="user-menu">
               <button 
                 className="user-button"
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
               >
-                <div className="user-avatar">
+                <div className="user-avatar1">
                   {user.profilePicture ? (
                     <img 
                       src={user.profilePicture} 
@@ -115,7 +98,7 @@ export const Navbar = () => {
                     />
                   ) : (
                     <span className="avatar-fallback">
-                      {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                      {getUserInitials()}
                     </span>
                   )}
                 </div>
@@ -136,7 +119,7 @@ export const Navbar = () => {
                 <div className="dropdown-menu">
                   <div className="dropdown-header">
                     <div className="user-info1">
-                      <p className="user-display-name">{user.name || user.username}</p>
+                      <p className="user-display-name">{user.name}</p>
                       <p className="user-email">@{user.username}</p>
                     </div>
                   </div>

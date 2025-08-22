@@ -199,13 +199,18 @@ export const deleteUser = async (id, confirmationData = null) => {
 
 export const getUserStats = async (id) => {
     try {
-        const [userResponse, publicationsResponse] = await Promise.all([
-            apiClient.get(`/user/getUser/${id}`),
-            apiClient.get(`/publication/user/${id}`)
-        ]);
+        const userResponse = await apiClient.get(`/user/getUser/${id}`);
+        
+        let publications = [];
+        try {
+            const publicationsResponse = await apiClient.get(`/publication/user/${id}`);
+            publications = publicationsResponse.data.publications || [];
+        } catch (publicationError) {
+            console.log('Usuario sin publicaciones o error al obtenerlas:', publicationError.response?.status);
+            publications = [];
+        }
         
         const user = userResponse.data.user;
-        const publications = publicationsResponse.data.publications || [];
         
         const totalLikes = publications.reduce((total, pub) => {
             return total + (pub.reactionCount?.total || 0);

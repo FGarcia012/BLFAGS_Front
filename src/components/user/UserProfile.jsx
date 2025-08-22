@@ -172,12 +172,20 @@ export const UserProfile = ({ userId = null }) => {
                         {!canSeeFilters ? (
                             <p>Este usuario no tiene publicaciones públicas</p>
                         ) : visibilityFilter === 'all' ? (
-                            <p>No hay publicaciones para mostrar</p>
+                            <>
+                                <p>¡Bienvenido a tu perfil!</p>
+                                {canCreatePublications && (
+                                    <>
+                                        <p>Aún no tienes publicaciones, pero puedes empezar creando tu primera publicación.</p>
+                                        <p className="create-first-publication">¡Crea tu primera publicación usando el botón de arriba!</p>
+                                    </>
+                                )}
+                                {!canCreatePublications && (
+                                    <p>Este usuario aún no ha creado ninguna publicación.</p>
+                                )}
+                            </>
                         ) : (
                             <p>No hay publicaciones {visibilityFilter === 'public' ? 'públicas' : 'privadas'} para mostrar</p>
-                        )}
-                        {canCreatePublications && visibilityFilter === 'all' && (
-                            <p className="create-first-publication">¡Crea tu primera publicación usando el botón de arriba!</p>
                         )}
                     </div>
                 )}
