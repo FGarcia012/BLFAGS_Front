@@ -165,7 +165,7 @@ export const UserSettings = ({ userId }) => {
                             className="form-input"
                             value={formData.name}
                             onChange={(e) => handleFormDataChange('name', e.target.value)}
-                            placeholder="Tu nombre completo"
+                            placeholder="Tu ompleto"
                         />
                     </div>
 

@@ -266,7 +266,7 @@ export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate
                         className="submit-button"
                         disabled={!selectedFile || isSubmitting}
                         style={{
-                            background: (!selectedFile || isSubmitting) ? '#9ca3af' : '#10b981',
+                            background: (!selectedFile || isSubmitting) ? '#9ca3af' : '#3b82f6',
                             color: 'white',
                             border: 'none',
                             padding: '12px 24px',

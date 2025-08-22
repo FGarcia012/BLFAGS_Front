@@ -247,7 +247,7 @@ export const UserPasswordSettings = ({ userId }) => {
                         className="submit-button"
                         disabled={isSubmitting || !passwordValidation.isValid || !formData.currentPassword}
                         style={{
-                            background: (isSubmitting || !passwordValidation.isValid || !formData.currentPassword) ? '#9ca3af' : '#dc2626',
+                            background: (isSubmitting || !passwordValidation.isValid || !formData.currentPassword) ? '#9ca3af' : '#3b82f6',
                             color: 'white',
                             border: 'none',
                             padding: '12px 24px',

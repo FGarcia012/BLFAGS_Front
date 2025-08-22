@@ -66,7 +66,7 @@
     font-size: 1.7rem;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 2rem;
+    margin: 0;
     text-align: center;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1e40af 100%);
@@ -74,6 +74,20 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}
+
+.admin-indicator {
+    font-size: 0.8rem;
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.6));
+    font-weight: 600;
+}
+
+.publications-header {
+    margin-bottom: 2rem;
 }
 
 .no-publications {
@@ -84,9 +98,16 @@
 
 .no-publications p {
     font-size: 1.2rem;
-    margin: 0;
+    margin: 0.5rem 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
     font-weight: 500;
+}
+
+.create-first-publication {
+    color: #60a5fa !important;
+    font-weight: 600;
+    margin-top: 1rem !important;
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
 }
 
 .user-profile-loading {

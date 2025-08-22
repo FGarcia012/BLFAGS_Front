@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getUserStats } from '../../services/api';
+import { debugLog } from '../utils/debug';
 
 export const useUserProfile = (userId) => {
     const [userProfile, setUserProfile] = useState(null);
@@ -43,6 +44,12 @@ export const useUserProfile = (userId) => {
             if (response.error) {
                 throw new Error(response.e?.response?.data?.message || 'Error al cargar el perfil');
             }
+            
+            debugLog('📊 UserProfile Stats Response:', {
+                user: response.user,
+                stats: response.stats,
+                publications: response.stats.publications
+            });
             
             setUserProfile(response.user);
             setStats(response.stats);
