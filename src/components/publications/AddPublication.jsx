@@ -255,13 +255,6 @@ export const AddPublication = ({ onPublicationAdded, isOwnProfile = false }) => 
 
                         <div className="form-actions">
                             <button
-                                type="button"
-                                className="cancel-button"
-                                onClick={handleClose}
-                            >
-                                Cancelar
-                            </button>
-                            <button
                                 type="submit"
                                 className="submit-button"
                                 disabled={loading || !formData.title.trim() || !formData.description.trim()}
