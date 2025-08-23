@@ -161,3 +161,5 @@ export const PublicationCard = ({
     </div>
   );
 };
+
+export default PublicationCard;

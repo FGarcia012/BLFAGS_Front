@@ -103,6 +103,18 @@ export const deleteComment = async (id) => {
     }
 }
 
+export const deleteHashtag = async (id) => {
+    try {
+        const response = await apiClient.delete(`/hashtag/deleteHashtag/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
 export const getPublications = async (searchTerm = '') => {
     try {
         const publicationsClient = axios.create({
@@ -149,6 +161,62 @@ export const getComments = async () => {
         }
     }
 }
+
+export const fetchHashtags = async () => {
+    try {
+        const response = await apiClient.get(`/hashtag/getHashtags`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getHashtagById = async (id) => {
+    try {
+        const response = await apiClient.get(`/hashtag/getHashtag/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const searchHashtags = async (query) => {
+    try {
+        const API_BASE = "http://localhost:3020/BLFAGS/v1";
+        const res = await fetch(`${API_BASE}/hashtag/search?query=${encodeURIComponent(query)}`);
+        if (!res.ok) {
+            return { publications: [] };
+        }
+        return res.json();
+    } catch (error) {
+        return {
+        error: true,
+        e: error
+        };
+    }
+};
+
+export const fetchPublicationsByHashtag = async (name) => {
+  try {
+    const API_BASE = "http://localhost:3020/BLFAGS/v1";
+    const res = await fetch(`${API_BASE}/hashtag/publications/${encodeURIComponent(name)}`);
+    if (!res.ok) {
+      return { publications: [] };
+    }
+    return res.json();
+  } catch (error) {
+      return {
+            error: true,
+            e
+        }
+  }
+};
 
 export const getCommentsById = async (id) => {
     try {

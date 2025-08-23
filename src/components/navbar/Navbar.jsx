@@ -69,9 +69,9 @@ export const Navbar = () => {
           </button>
           <button 
             className="nav-link"
-            onClick={() => navigate("/about")}
+            onClick={() => navigate("/hashtags")}
           >
-            Acerca de
+            Hashtags
           </button>
           <button 
             className="nav-link"
@@ -182,4 +182,7 @@ export const Navbar = () => {
       </div>
     </nav>
   );
+
 };
+
+export default Navbar;
