@@ -67,6 +67,18 @@ export const addComments = async (data) => {
     }
 }
 
+export const addReaction = async (id, data) => {
+    try {
+        const response = await apiClient.post(`/reactions/addOrUpdateReaction/${id}`, data);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
 export const updatePublication = async (id, data) => {
     try {
         const response = await apiClient.put(`/publication/updatePublication/${id}`, data);
@@ -82,6 +94,42 @@ export const updatePublication = async (id, data) => {
 export const deletePublication = async (id) => {
     try {
         const response = await apiClient.delete(`/publication/deletePublication/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const deleteReaction = async (id) => {
+    try {
+        const response = await apiClient.delete(`/reactions/removeReaction/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getPublicationReactions = async (id) => {
+    try {
+        const response = await apiClient.get(`/reactions/getPublicationReactions/${id}`);
+        return response.data;
+    } catch (e) {
+        return {
+            error: true,
+            e
+        }
+    }
+}
+
+export const getUserReaction = async (id) => {
+    try {
+        const response = await apiClient.get(`/reactions/getUserReaction/${id}`);
         return response.data;
     } catch (e) {
         return {

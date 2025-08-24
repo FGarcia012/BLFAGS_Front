@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { PublicationReactions } from "./PublicationReactions";
 import { validateText } from "../../shared/validators/validateText";
 import { PublicationActions } from "./PublicationActions";
 import { CommentsList, CommentsToggle } from "../comments";
@@ -81,15 +82,17 @@ export const PublicationCard = ({
   };
 
   const renderStats = () => {
-    const { reactionCount = {} } = publication;
-    const totalReactions = reactionCount.total || 0;
-
+    let totalReactions = 0;
+    if (publication.reactionCount && typeof publication.reactionCount.total === 'number') {
+      totalReactions = publication.reactionCount.total;
+    }
     return (
-      <div className="publication-stats">
-        <div className="stat-item">
-          <span className="stat-icon">❤️</span>
+      <div className="publication-stats" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="stat-item" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span className="stat-icon" style={{ fontSize: 20 }}>⭐</span>
           <span className="stat-count">{totalReactions}</span>
         </div>
+        <PublicationReactions publicationId={publication.pid || publication._id} />
         <CommentsToggle 
           publicationId={publication.pid || publication._id}
           onToggle={setShowComments}
