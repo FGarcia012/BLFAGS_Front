@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: "http://localhost:3020/BLFAGS/v1/",
+    baseURL: "https://blfags-back.vercel.app/BLFAGS/v1/",
     timeout: 30000,
     httpsAgent: false
 });
@@ -166,7 +166,7 @@ export const deleteHashtag = async (id) => {
 export const getPublications = async (searchTerm = '') => {
     try {
         const publicationsClient = axios.create({
-            baseURL: "http://localhost:3020/BLFAGS/v1/",
+            baseURL: "https://blfags-back.vercel.app/BLFAGS/v1/",
             timeout: 30000,
         });
 
@@ -236,8 +236,8 @@ export const getHashtagById = async (id) => {
 
 export const searchHashtags = async (query) => {
     try {
-        const API_BASE = "http://localhost:3020/BLFAGS/v1";
-        const res = await fetch(`${API_BASE}/hashtag/search?query=${encodeURIComponent(query)}`);
+    const API_BASE = "https://blfags-back.vercel.app/BLFAGS/v1";
+    const res = await fetch(`${API_BASE}/hashtag/search?query=${encodeURIComponent(query)}`);
         if (!res.ok) {
             return { publications: [] };
         }
@@ -252,7 +252,7 @@ export const searchHashtags = async (query) => {
 
 export const fetchPublicationsByHashtag = async (name) => {
   try {
-    const API_BASE = "http://localhost:3020/BLFAGS/v1";
+    const API_BASE = "https://blfags-back.vercel.app/BLFAGS/v1";
     const res = await fetch(`${API_BASE}/hashtag/publications/${encodeURIComponent(name)}`);
     if (!res.ok) {
       return { publications: [] };

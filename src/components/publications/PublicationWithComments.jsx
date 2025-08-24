@@ -22,7 +22,7 @@ const PublicationWithComments = ({ publication, showCommentsInitially = false })
         const isVideo = /\.(mp4|webm|ogg)$/i.test(publication.media);
         const mediaUrl = publication.media.startsWith('http') 
             ? publication.media 
-            : `http://localhost:3020/BLFAGS/v1/uploads/publications/${publication.media}`;
+            : `https://blfags-back.vercel.app/BLFAGS/v1/uploads/publications/${publication.media}`;
 
         return (
             <div className="publication-media">

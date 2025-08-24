@@ -226,7 +226,7 @@ export const UserManagement = () => {
                                 }}>
                                     {user.profilePicture ? (
                                         <img 
-                                            src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://localhost:3020/${user.profilePicture}`}
+                                            src={user.profilePicture.startsWith('http') ? user.profilePicture : `https://blfags-back.vercel.app/${user.profilePicture}`}
                                             alt={user.name}
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
@@ -437,7 +437,7 @@ export const UserManagement = () => {
                                 }}>
                                     {selectedUser.profilePicture ? (
                                         <img 
-                                            src={selectedUser.profilePicture.startsWith('http') ? selectedUser.profilePicture : `http://localhost:3020/${selectedUser.profilePicture}`}
+                                            src={selectedUser.profilePicture.startsWith('http') ? selectedUser.profilePicture : `https://blfags-back.vercel.app/${selectedUser.profilePicture}`}
                                             alt={selectedUser.name}
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />

@@ -120,7 +120,7 @@ export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate
             if (currentProfilePicture.startsWith('http')) {
                 return currentProfilePicture;
             }
-            return `http://localhost:3020/${currentProfilePicture}`;
+            return `https://blfags-back.vercel.app/${currentProfilePicture}`;
         }
         return null;
     };

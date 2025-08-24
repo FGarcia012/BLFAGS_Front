@@ -282,7 +282,7 @@ const UserSettingsPageNew = () => {
                                 <div className="user-avatar">
                                     {profilePicture ? (
                                         <img 
-                                            src={profilePicture.startsWith('http') ? profilePicture : `http://localhost:3020/${profilePicture}`}
+                                            src={profilePicture.startsWith('http') ? profilePicture : `https://blfags-back.vercel.app/${profilePicture}`}
                                             alt={targetUser.name}
                                         />
                                     ) : (

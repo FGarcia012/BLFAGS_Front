@@ -61,7 +61,7 @@ const CommentCard = ({ comment, onCommentDeleted }) => {
             return mediaPath;
         }
         
-        return `http://localhost:3020/BLFAGS/v1/uploads/comments/${mediaPath}`;
+        return `https://blfags-back.vercel.app/BLFAGS/v1/uploads/comments/${mediaPath}`;
     };
 
     return (
