@@ -160,6 +160,17 @@ export const HomePage = () => {
         >
           Iniciar Sesión
         </motion.button>
+        
+        {/* Botón para ver publicaciones sin autenticación */}
+        <motion.button
+          onClick={() => navigate("/publications")}
+          className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-2xl shadow-xl transition-all duration-300 transform flex items-center justify-center"
+          whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(99, 102, 241, 0.3)" }}
+          whileTap={{ scale: 0.95 }}
+        >
+          👁️ Mirar Publicaciones
+        </motion.button>
+        
         <motion.button
           onClick={() => navigate("/register")}
           className="flex items-center justify-center bg-white/10 backdrop-blur-sm border border-blue-400/30 text-blue-100 hover:text-white hover:bg-blue-500/20 px-8 py-4 rounded-2xl shadow-xl transition-all duration-300"

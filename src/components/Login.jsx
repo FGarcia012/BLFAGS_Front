@@ -5,6 +5,7 @@ import {
   validateEmail,
 } from '../shared/validators';
 import { useLogin } from '../shared/hooks/useLogin';
+import { BackButton } from './BackButton/BackButton';
 
 const shootingStarColors = ["#1e40af", "#3b82f6", "#60a5fa"];
 const particleColors = ["#1e40af", "#3b82f6", "#60a5fa", "#93c5fd"];
@@ -144,6 +145,16 @@ export const Login = ({ switchAuthHandler }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Botón de volver al inicio */}
+      <div className="absolute top-6 left-6 z-20">
+        <BackButton 
+          to="/" 
+          text="Volver al Inicio" 
+          icon="home" 
+          variant="outline"
+        />
+      </div>
+
       {/* Partículas animadas */}
       {particlesArray.map((_, i) => {
         const size = Math.random() * 3 + 1;
@@ -270,23 +281,6 @@ export const Login = ({ switchAuthHandler }) => {
                 La contraseña es requerida
               </motion.p>
             )}
-          </div>
-
-          {/* Opciones adicionales */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center space-x-2 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                className="w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 transition-all"
-              />
-              <span className="text-gray-600 group-hover:text-gray-800 transition-colors">Recordarme</span>
-            </label>
-            <button 
-              type="button"
-              className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-            >
-              ¿Olvidaste tu contraseña?
-            </button>
           </div>
 
           {/* Botón Login */}

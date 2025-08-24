@@ -1,7 +1,21 @@
 export const validateName = (name) => {
-    const regex = /^[^\s]{1}[A-Za-zÁ-ÿ\u00f1\u00d1\s]{1,23}[^\s]{1}$/
+    if (!name || typeof name !== 'string') {
+        return false;
+    }
 
-    return regex.test(name.trim()) 
+    const trimmedName = name.trim();
+    
+    if (trimmedName.length < 2 || trimmedName.length > 50) {
+        return false;
+    }
+    
+    const regex = /^[A-Za-zÁ-ÿ\u00f1\u00d1]([A-Za-zÁ-ÿ\u00f1\u00d1\s'-]*[A-Za-zÁ-ÿ\u00f1\u00d1])?$/;
+    
+    if (trimmedName.includes('  ')) {
+        return false;
+    }
+    
+    return regex.test(trimmedName);
 }
 
-export const validateNameMessage = 'El nombre debe contener entre 3 y 25 caracteres'
+export const validateNameMessage = 'El nombre debe tener entre 2 y 50 caracteres, solo letras, espacios, guiones y apostrofes';

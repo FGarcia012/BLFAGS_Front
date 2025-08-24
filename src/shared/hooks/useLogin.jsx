@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/api";
+import { useUser } from "../../contexts/UserContext";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { login: contextLogin } = useUser();
   const navigate = useNavigate();
 
   const loginUser = async ({ email, username, password }) => {
@@ -21,23 +23,39 @@ export const useLogin = () => {
 
       const response = await login(loginData);
 
-      const userDetails = response.data?.userDetails;
+      let userDetails, token;
+      
+      if (response.data?.userDetails?.token) {
+        userDetails = response.data.userDetails;
+        token = userDetails.token;
+        const { token: _, ...userWithoutToken } = userDetails;
+        userDetails = userWithoutToken;
+      } else {
+        userDetails = response.data?.userDetails;
+        token = response.data?.token;
+      }
 
       if (!userDetails) {
         toast.error("Detalles del usuario no encontrados en la respuesta.");
         return;
       }
 
+      if (!token) {
+        toast.error("Token de autenticación no encontrado en la respuesta.");
+        return;
+      }
+
+      const userToSave = {
+        ...userDetails,
+        token: token
+      };
+
       toast.success(response.data.message || "Inicio de sesión exitoso");
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...userDetails,
-        })
-      );
+      // Usar el contexto para manejar el login
+      contextLogin(userToSave);
 
-      navigate("/home", { replace: true });
+      navigate("/publications", { replace: true });
 
     } catch (error) {
       const errorMessage = error?.response?.data?.error || 
