@@ -38,8 +38,8 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <div className="relative flex-1 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white flex flex-col items-center justify-center px-4 overflow-hidden">
+    <div className="min-h-screen flex flex-col overflow-hidden">
+      <div className="relative flex-1 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white flex flex-col items-center justify-center px-2 sm:px-4 overflow-hidden">
 
       {/* Partículas animadas */}
       {particlesArray.map((_, i) => {
