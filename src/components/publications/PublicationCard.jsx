@@ -3,6 +3,7 @@ import { PublicationReactions } from "./PublicationReactions";
 import { validateText } from "../../shared/validators/validateText";
 import { PublicationActions } from "./PublicationActions";
 import { CommentsList, CommentsToggle } from "../comments";
+import "./PublicationCard.css";
 
 export const PublicationCard = ({ 
   publication, 
