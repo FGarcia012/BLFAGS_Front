@@ -75,25 +75,23 @@
 
 /* Modal de confirmación de eliminación */
 .delete-confirm-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .delete-confirm-modal {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 28px 18px 28px;
+  max-width: 95vw;
+  width: 370px;
+  box-shadow: 0 2px 16px rgba(25, 118, 210, 0.13);
+  text-align: center;
 }
 
 .delete-confirm-modal h3 {
@@ -116,16 +114,28 @@
 }
 
 .confirm-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  justify-content: center;
+}
+
+.confirm-actions button {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 10px 0;
+  border-radius: 12px;
+  font-size: 1rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .cancel-button {
     padding: 10px 20px;
     border: 1px solid #d1d5db;
-    background: white;
-    color: #374151;
+    background: #f3f8ff;
+    color: #1976d2;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -140,8 +150,8 @@
 .confirm-delete-button {
     padding: 10px 20px;
     border: none;
-    background: #ef4444;
-    color: white;
+    background: #e53935;
+    color: #fff;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
@@ -173,4 +183,22 @@
         padding: 10px 12px;
         font-size: 13px;
     }
+}
+
+@media (max-width: 600px) {
+  .delete-confirm-modal {
+    width: 95vw;
+    padding: 18px 8px 12px 8px;
+    min-width: unset;
+    max-width: 98vw;
+  }
+  .confirm-actions {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .confirm-actions button {
+    width: 100%;
+    font-size: 1rem;
+  }
 }
