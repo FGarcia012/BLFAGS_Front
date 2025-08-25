@@ -75,7 +75,7 @@ export const Register = ({ switchAuthHandler }) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        alert("El archivo es muy grande. Máximo 5MB.");
+        alert("El archivo es muy grande. Máximo 10MB.");
         return;
       }
       

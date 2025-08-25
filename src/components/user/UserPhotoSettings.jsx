@@ -14,7 +14,7 @@ export const UserPhotoSettings = ({ userId, currentProfilePicture, onPhotoUpdate
     const fileInputRef = useRef(null);
 
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    const maxSize = 5 * 1024 * 1024; 
+    const maxSize = 10 * 1024 * 1024; 
 
     const validateFile = (file) => {
         if (!allowedTypes.includes(file.type)) {
