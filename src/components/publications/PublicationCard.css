@@ -17,8 +17,8 @@
     padding: 0px 2vw 0px 2vw;
     border-radius: 12px;
     margin-bottom: 16px;
-    max-width: 70vw;
-    width: 100vw;
+    max-width: 100%;
+    width: 100%;
   }
   .publication-header,
   .publication-content,
@@ -38,12 +38,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
   width: 100%;
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: thin;
-  scrollbar-color: #1976d2 #e3f2fd;
+  scrollbar-color: #8295a9 #e3f2fd;
 }
 
 @media (max-width: 600px) {
