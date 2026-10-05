@@ -1,95 +1,12 @@
-import React from 'react';
-import CommentCard from './CommentCard';
-import AddComment from './AddComment';
-import { useComments } from '../../shared/hooks/useComments';
-import { LoadingSpinner } from '../LoadingSpinner/LoadingSpinner';
-import './CommentsList.css';
-
-const CommentsList = ({ 
-    publicationId, 
-    publication = null, 
-    showAddComment = true 
-}) => {
-    const {
-        comments,
-        loading,
-        error,
-        canAddComment,
-        refreshComments
-    } = useComments(publicationId);
-
-    const handleCommentAdded = (newComment) => {
-        refreshComments();
-    };
-
-    const handleCommentDeleted = (commentId) => {
-        refreshComments();
-    };
-
-    const showAddCommentForm = showAddComment && canAddComment(publication);
-
-    if (loading) {
-        return (
-            <div className="comments-loading">
-                <LoadingSpinner />
-            </div>
-        );
-    }
-
-    return (
-        <div className="publication-comments">
-            <div className="comments-header">
-                <h4 className="comments-title">Comentarios ({comments.length})</h4>
-                <button 
-                    onClick={refreshComments}
-                    className="comments-refresh-btn"
-                    title="Actualizar comentarios"
-                >
-                    🔄
-                </button>
-            </div>
-
-            {showAddCommentForm && (
-                <AddComment 
-                    publicationId={publicationId}
-                    onCommentAdded={handleCommentAdded}
-                />
-            )}
-
-            {error && (
-                <div className="comments-error">
-                    <p>{error}</p>
-                    <button 
-                        onClick={refreshComments}
-                        className="comments-retry-btn"
-                    >
-                        Reintentar
-                    </button>
-                </div>
-            )}
-
-            <div className="comments-list">
-                {comments.length === 0 ? (
-                    <div className="comments-empty">
-                        <p>No hay comentarios aún</p>
-                        {showAddCommentForm && (
-                            <p className="comments-empty-suggestion">
-                                ¡Sé el primero en comentar!
-                            </p>
-                        )}
-                    </div>
-                ) : (
-                    comments.map(comment => (
-                        <CommentCard
-                            key={comment.cid}
-                            comment={comment}
-                            onCommentDeleted={handleCommentDeleted}
-                        />
-                    ))
-                )}
-            </div>
-        </div>
-    );
-};
-
-export default CommentsList;
+import {useState} from 'react';
+import {useComments} from '../../shared/hooks/useComments.jsx';
+import {useUser} from '../../contexts/UserContext.jsx';
+import {Button,Textarea,Input,Avatar,Spinner,ErrorState} from '../ui/index.jsx';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2.js';
+export default function CommentsList({publicationId,open = true}) {
+ const {user} = useUser(),query = useComments(publicationId,open),[text,setText] = useState('');
+ const submit = event => {event.preventDefault(); const data = new FormData(event.currentTarget); data.set('publication',publicationId); query.add.mutate(data,{onSuccess:() => {setText(''); event.target.reset();}});};
+ if (query.isPending) return <Spinner/>;
+ if (query.isError) return <ErrorState retry={query.refetch}/>;
+ return <section className="comments-section" aria-label="Comentarios"><div className="stack">{query.comments.map(comment => <article key={comment.cid || comment._id} className="comment"><Avatar user={comment.user}/><div><strong>@{comment.user?.username || 'Cuenta eliminada'}</strong><p>{comment.text}</p>{comment.media && (/\/video\//.test(comment.media) ? <video src={comment.media} controls width="400" height="260" preload="none" referrerPolicy="no-referrer"/> : <img src={comment.media} alt="Archivo del comentario" width="400" height="260" loading="lazy" decoding="async" referrerPolicy="no-referrer"/>)}</div>{(comment.isMine || user?.role === 'ADMIN') && <Button variant="ghost" aria-label="Borrar comentario" disabled={query.remove.isPending} onClick={() => query.remove.mutate(comment.cid || comment._id)}><Trash2 size={16}/></Button>}</article>)}</div>{!query.comments.length && <p className="muted">Sé la primera voz en esta conversación.</p>}{query.hasNextPage && <Button variant="ghost" disabled={query.isFetchingNextPage} onClick={() => query.fetchNextPage()}>Más comentarios</Button>}{user ? <form className="stack comment-form" onSubmit={submit}><Textarea label="Tu comentario" name="text" value={text} onChange={event => setText(event.target.value)} maxLength={500} rows={2}/><Input label="Archivo opcional (máximo 4 MB)" name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"/><Button type="submit" disabled={query.add.isPending}>{query.add.isPending ? 'Enviando…':'Comentar'}</Button></form>:<p className="muted">Inicia sesión para unirte a la conversación.</p>}</section>;
+}

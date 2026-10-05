@@ -1,85 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { login } from "../../services/api";
-import { useUser } from "../../contexts/UserContext";
-import toast from "react-hot-toast";
-import { useState } from "react";
-
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import toast from 'react-hot-toast';
+import {login,getErrorMessage} from '../../services/api.jsx';
+import {useUser} from '../../contexts/UserContext.jsx';
 export const useLogin = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { login: contextLogin } = useUser();
-  const navigate = useNavigate();
-
-  const loginUser = async ({ email, username, password }) => {
-    try {
-      setIsLoading(true);
-
-      const loginData = { password };
-      if (email) {
-        loginData.email = email;
-      }
-      if (username) {
-        loginData.username = username;
-      }
-
-      const response = await login(loginData);
-
-      let userDetails, token;
-      
-      if (response.data?.userDetails?.token) {
-        userDetails = response.data.userDetails;
-        token = userDetails.token;
-        const { token: _, ...userWithoutToken } = userDetails;
-        userDetails = userWithoutToken;
-      } else {
-        userDetails = response.data?.userDetails;
-        token = response.data?.token;
-      }
-
-      if (!userDetails) {
-        toast.error("Detalles del usuario no encontrados en la respuesta.");
-        return;
-      }
-
-      if (!token) {
-        toast.error("Token de autenticación no encontrado en la respuesta.");
-        return;
-      }
-
-      const userToSave = {
-        ...userDetails,
-        token: token
-      };
-
-      toast.success(response.data.message || "Inicio de sesión exitoso");
-
-      // Usar el contexto para manejar el login
-      contextLogin(userToSave);
-
-      navigate("/publications", { replace: true });
-
-    } catch (error) {
-      const errorMessage = error?.response?.data?.error || 
-                          error?.response?.data?.message || 
-                          "";
-
-      if (errorMessage.toLowerCase().includes("credenciales invalidas")) {
-        if (errorMessage.includes("usuario") || errorMessage.includes("correo")) {
-          toast.error("Usuario o correo electrónico incorrecto");
-        } else if (errorMessage.includes("contraseña")) {
-          toast.error("Contraseña incorrecta");
-        } else {
-          toast.error("Credenciales inválidas");
-        }
-      } else {
-        toast.error(errorMessage || "Error al iniciar sesión");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return {
-    loginUser,
-    isLoading,
-  };
+ const [isLoading,setIsLoading] = useState(false),{login:saveUser} = useUser(),navigate = useNavigate();
+ const loginUser = async data => {
+  setIsLoading(true);
+  try {const response = await login(data); saveUser({...response.data.userDetails,token:response.data.token}); navigate('/publications',{replace:true});}
+  catch(error) {toast.error(error.response?.status === 401 ? 'Credenciales inválidas':getErrorMessage(error));}
+  finally {setIsLoading(false);}
+ };
+ return {loginUser,isLoading};
 };

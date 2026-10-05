@@ -1,127 +1,15 @@
-import React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import { motion } from "framer-motion";
-import { UserProfile } from '../../components/user/UserProfile';
-import { BackButton } from '../../components/BackButton/BackButton';
-import './UserProfilePage.css';
-
-const shootingStarColors = ["#1e40af", "#3b82f6", "#60a5fa"];
-const particleColors = ["#1e40af", "#3b82f6", "#60a5fa", "#93c5fd"];
-
-const shootingStarVariants = {
-  hidden: { opacity: 0, x: 0, y: 0 },
-  visible: (custom) => ({
-    opacity: [0, 1, 0],
-    x: [0, 120 + custom * 60],
-    y: [0, 40 * (custom % 2 === 0 ? 1 : -1), 0],
-    transition: {
-      duration: 1.5,
-      delay: custom * 0.6,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  }),
-};
-
-const particleVariants = {
-  animate: {
-    opacity: [0.3, 0.8, 0.3],
-    y: [0, -10, 0],
-    transition: {
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  },
-};
-
-export const UserProfilePage = () => {
-    const { userId } = useParams();
-    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-    const particlesArray = Array(50).fill(0);
-
-    const targetUserId = userId || currentUser._id || currentUser.uid;
-
-    if (!targetUserId) {
-        return <Navigate to="/auth" replace />;
-    }
-
-    return (
-        <div className="user-profile-page">
-            {/* Botón de volver a publicaciones */}
-            <motion.div 
-                className="back-button-container"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <BackButton 
-                    to="/publications" 
-                    text="Volver a Publicaciones" 
-                    icon="publications" 
-                    variant="success"
-                />
-            </motion.div>
-
-            {/* Partículas animadas */}
-            {particlesArray.map((_, i) => {
-                const size = Math.random() * 3 + 1;
-                const color = particleColors[i % particleColors.length];
-                const top = Math.random() * 100;
-                const left = Math.random() * 100;
-                return (
-                    <motion.div
-                        key={`particle-${i}`}
-                        className="absolute rounded-full"
-                        style={{
-                            top: `${top}%`,
-                            left: `${left}%`,
-                            width: size,
-                            height: size,
-                            backgroundColor: color,
-                            filter: `drop-shadow(0 0 6px ${color})`,
-                        }}
-                        variants={particleVariants}
-                        animate="animate"
-                        initial={{ opacity: 0.3, y: 0 }}
-                        transition={{
-                            duration: 4 + Math.random() * 3,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: i * 0.1,
-                        }}
-                    />
-                );
-            })}
-
-            {/* Estrellas fugaces */}
-            {[...Array(15)].map((_, i) => {
-                const color = shootingStarColors[i % shootingStarColors.length];
-                return (
-                    <motion.div
-                        key={`shooting-star-${i}`}
-                        custom={i}
-                        className="absolute rounded-lg blur-sm"
-                        style={{
-                            top: `${Math.random() * 80 + 10}%`,
-                            left: `${Math.random() * 50}%`,
-                            width: 6 + Math.random() * 10,
-                            height: 1.5 + Math.random() * 2,
-                            rotate: 45,
-                            backgroundColor: color,
-                            opacity: 0,
-                            filter: `drop-shadow(0 0 12px ${color})`,
-                        }}
-                        variants={shootingStarVariants}
-                        initial="hidden"
-                        animate="visible"
-                    />
-                );
-            })}
-
-            <div className="user-profile-container">
-                <UserProfile userId={targetUserId} />
-            </div>
-        </div>
-    );
-};
+import {useParams} from 'react-router-dom';
+import {useQuery,useInfiniteQuery} from '@tanstack/react-query';
+import {getUserById,getPublicationsByUser} from '../../services/api.jsx';
+import {useUser} from '../../contexts/UserContext.jsx';
+import {Avatar,Skeleton,ErrorState,EmptyState,Button} from '../../components/ui/index.jsx';
+import {PublicationCard} from '../../components/publications/PublicationCard.jsx';
+import {AddPublication} from '../../components/publications/AddPublication.jsx';
+export function UserProfilePage() {
+ const {userId} = useParams(),{user} = useUser();
+ const profile = useQuery({queryKey:['user',userId,user?.uid],queryFn:({signal}) => getUserById(userId,signal)});
+ const posts = useInfiniteQuery({queryKey:['userPublications',userId,user?.uid],initialPageParam:null,queryFn:({pageParam,signal}) => getPublicationsByUser(userId,{cursor:pageParam,signal}),getNextPageParam:page => page.hasMore ? page.nextCursor:undefined});
+ if (profile.isPending) return <div className="page"><Skeleton/></div>;
+ if (profile.isError) return <div className="page"><ErrorState>Perfil no disponible</ErrorState></div>;
+ return <div className="page detail-page"><header className="profile-heading"><Avatar user={profile.data.user} size="large"/><span className="eyebrow">UN ALIAS, MUCHAS HISTORIAS</span><h1>@{profile.data.user.username}</h1><p>Miembro desde {new Date(profile.data.user.createdAt).toLocaleDateString('es',{month:'long',year:'numeric'})}</p>{userId === user?.uid && <AddPublication/>}</header><div className="stack">{posts.isPending ? <Skeleton/>:posts.isError ? <ErrorState retry={posts.refetch}/>:posts.data.pages.flatMap(page => page.publications).length ? posts.data.pages.flatMap(page => page.publications).map(publication => <PublicationCard key={publication.pid} publication={publication}/>):<EmptyState>Este espacio espera su primera historia.</EmptyState>}{posts.hasNextPage && <Button disabled={posts.isFetchingNextPage} onClick={() => posts.fetchNextPage()}>Más publicaciones</Button>}</div></div>;
+}

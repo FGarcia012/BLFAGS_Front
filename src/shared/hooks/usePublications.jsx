@@ -1,84 +1,21 @@
-import { useState, useEffect } from "react";
-import { getPublications } from "../../services/api";
-import { usePublicationsRefresh } from "../../contexts/PublicationsRefreshContext";
-import toast from "react-hot-toast";
-
-export const usePublications = (initialSearchTerm = '') => {
-  const [publications, setPublications] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
-  const { subscribe } = usePublicationsRefresh();
-
-  const fetchPublications = async (search = searchTerm) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const userDetails = localStorage.getItem("user");
-      const user = userDetails ? JSON.parse(userDetails) : null;
-
-      const response = await getPublications(search);
-
-      if (response.error) {
-        if (response.e?.response?.status === 401) {
-          setPublications([]);
-          return;
-        }
-        
-        if (response.e?.response?.status === 404) {
-          setPublications([]);
-          return;
-        }
-        
-        throw new Error(response.e?.response?.data?.message || "Error al obtener las publicaciones");
-      }
-
-      if (response.success && response.publications) {
-        setPublications(response.publications);
-      } else {
-        setPublications([]);
-      }
-
-    } catch (error) {
-      if (error?.response?.status !== 401 && error?.response?.status !== 404) {
-        const errorMessage = error?.response?.data?.message || 
-                            error?.message || 
-                            "Error al cargar las publicaciones";
-        
-        setError(errorMessage);
-        toast.error(errorMessage);
-      }
-      setPublications([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const refreshPublications = () => {
-    fetchPublications(searchTerm);
-  };
-
-  const handleSearch = (newSearchTerm) => {
-    setSearchTerm(newSearchTerm);
-    fetchPublications(newSearchTerm);
-  };
-
-  useEffect(() => {
-    fetchPublications();
-    
-    const unsubscribe = subscribe(() => fetchPublications(searchTerm));
-    
-    return unsubscribe;
-  }, [subscribe]);
-
-  return {
-    publications,
-    isLoading,
-    error,
-    searchTerm,
-    refreshPublications,
-    fetchPublications,
-    handleSearch
-  };
-};
+import {useState,useEffect} from 'react';
+import {useInfiniteQuery,useQueryClient} from '@tanstack/react-query';
+import {getPublications} from '../../services/api.jsx';
+import {useUser} from '../../contexts/UserContext.jsx';
+export function usePublications(search = '',filter = 'all') {
+ const {user} = useUser(),[debounced,setDebounced] = useState(search),client = useQueryClient();
+ useEffect(() => {const timer = setTimeout(() => setDebounced(search),400); return () => clearTimeout(timer);},[search]);
+ const key = ['publications',{search:debounced,filter,uid:user?.uid || null}];
+ const query = useInfiniteQuery({queryKey:key,initialPageParam:null,queryFn:async ({pageParam,signal}) => ({...await getPublications(debounced.trim().length >= 2 ? debounced:'',{cursor:pageParam,filter,signal}),receivedAt:Date.now()}),getNextPageParam:page => page.hasMore ? page.nextCursor:undefined,refetchInterval:60000,refetchIntervalInBackground:false,
+  structuralSharing:(old,incoming) => {
+   if (!old || old.acceptIncoming || old.pages[0]?.receivedAt === incoming.pages[0]?.receivedAt || incoming.pages.length !== old.pages.length) return incoming;
+   const oldIds = new Set(old.pages.flatMap(page => page.publications.map(row => row.pid)));
+   const fresh = new Map(incoming.pages.flatMap(page => page.publications.map(row => [row.pid,row])));
+   const pending = incoming.pages.some(page => page.publications.some(row => !oldIds.has(row.pid)));
+   if (!pending) return incoming;
+   return {...incoming,pending:true,pages:incoming.pages.map((page,i) => ({...page,latest:page,publications:old.pages[i].publications.map(row => fresh.get(row.pid) || row)}))};
+  }});
+ const refresh = () => {client.setQueryData(key,old => old ? {...old,acceptIncoming:true}:old); return query.refetch();};
+ const showNew = () => client.setQueryData(key,old => ({...old,pending:false,pages:old.pages.map(page => page.latest || page)}));
+ return {...query,refresh,showNew,hasNew:query.data?.pending,publications:query.data?.pages.flatMap(page => page.publications) || []};
+}

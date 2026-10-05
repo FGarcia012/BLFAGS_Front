@@ -1,106 +1,13 @@
-import React, { useState, useMemo } from "react";
-import { PublicationList } from "../../components/publications/PublicationList";
-import { PublicationSearch } from "../../components/publications/PublicationSearch";
-import { AdminPublications } from "../../components/publications/AdminPublications";
-import { usePublications } from "../../shared/hooks/usePublications";
-import { useUser } from "../../contexts/UserContext";
-import { Navbar } from "../../components/navbar/Navbar";
-import "./PublicationsPage.css";
-
-export const PublicationsPage = () => {
-  const [visibilityFilter, setVisibilityFilter] = useState('all');
-  const { user, isAuthenticated } = useUser();
-  const {
-    publications,
-    isLoading,
-    error,
-    searchTerm,
-    refreshPublications,
-    handleSearch
-  } = usePublications();
-
-  const isAdmin = user?.role === 'ADMIN';
-
-  const filteredPublications = useMemo(() => {
-    if (!publications || publications.length === 0) return [];
-    
-    if (visibilityFilter === 'all') {
-      return publications;
-    }
-    
-    return publications.filter(pub => pub.visibility === visibilityFilter);
-  }, [publications, visibilityFilter]);
-
-  const handleVisibilityFilter = (filter) => {
-    setVisibilityFilter(filter);
-  };
-
-  return (
-    <div className="publications-page">
-      <Navbar />
-      <div className="publications-page-container">
-        <header className="publications-page-header">
-          <h1>
-            {isAdmin ? 'Gestión de Publicaciones' : 'Descubre Publicaciones'}
-          </h1>
-          <p>
-            {isAdmin 
-              ? 'Panel de administración para gestionar todas las publicaciones del sistema'
-              : 'Explora las últimas publicaciones de la comunidad'
-            }
-          </p>
-          
-          {/* Mostrar botones de autenticación si no está logueado */}
-          {!isAuthenticated && (
-            <div className="auth-buttons">
-              <button 
-                onClick={() => window.location.href = '/auth'}
-                className="auth-btn login-btn"
-              >
-                Iniciar Sesión
-              </button>
-              <button 
-                onClick={() => window.location.href = '/register'}
-                className="auth-btn register-btn"
-              >
-                Registrarse
-              </button>
-            </div>
-          )}
-        </header>
-
-        <main className="publications-page-content">
-          {/* Componente de búsqueda */}
-          <PublicationSearch 
-            onSearch={handleSearch}
-            isLoading={isLoading}
-            initialValue={searchTerm}
-            placeholder={isAdmin 
-              ? "Buscar publicaciones (puedes ver todas como admin)..." 
-              : "Buscar publicaciones por título..."
-            }
-          />
-
-          {/* Panel de administrador si es admin */}
-          {isAdmin && (
-            <AdminPublications 
-              publications={filteredPublications}
-              onVisibilityFilter={handleVisibilityFilter}
-              currentFilter={visibilityFilter}
-              searchTerm={searchTerm}
-              isLoading={isLoading}
-            />
-          )}
-
-          {/* Lista de publicaciones */}
-          <PublicationList
-            publications={filteredPublications}
-            isLoading={isLoading}
-            error={error}
-            onRefresh={refreshPublications}
-          />
-        </main>
-      </div>
-    </div>
-  );
-};
+import {useState,useRef} from 'react';
+import RefreshCw from 'lucide-react/dist/esm/icons/refresh-cw.js';
+import Search from 'lucide-react/dist/esm/icons/search.js';
+import ArrowDown from 'lucide-react/dist/esm/icons/arrow-down.js';
+import {usePublications} from '../../shared/hooks/usePublications.jsx';
+import {useUser} from '../../contexts/UserContext.jsx';
+import {PublicationCard} from '../../components/publications/PublicationCard.jsx';
+import {AddPublication} from '../../components/publications/AddPublication.jsx';
+import {Button,Input,Select,Skeleton,ErrorState,EmptyState} from '../../components/ui/index.jsx';
+export function PublicationsPage() {
+ const {user} = useUser(),[search,setSearch] = useState(''),[filter,setFilter] = useState('all'),query = usePublications(search,filter),anchor = useRef(null);
+ return <div className="page feed-page"><header className="page-heading"><div><span className="eyebrow">VOCES DE LA COMUNIDAD</span><h1>Lo que queremos decir.</h1><p>Un lugar para historias que merecen espacio.</p></div>{user && <AddPublication/>}</header><div className="feed-layout"><aside className="feed-sidebar"><h2>Encuentra tu conversación</h2><div className="stack"><Input label="Buscar publicaciones" placeholder="Una idea, una historia…" value={search} onChange={event => setSearch(event.target.value)}/><Select label="Visibilidad" value={filter} onChange={event => setFilter(event.target.value)}><option value="all">Todas</option><option value="public">Públicas</option>{user && <option value="private">Mis privadas</option>}</Select><Button variant="secondary" disabled={query.isFetching} onClick={() => query.refresh()}><RefreshCw size={16}/>Actualizar</Button></div><div className="sidebar-note"><Search size={20}/><p>Busca al menos dos caracteres. Tu alias es lo único que se muestra.</p></div></aside><div className="feed-content" ref={anchor}>{query.hasNew && <Button className="new-posts" onClick={() => {query.showNew(); anchor.current?.scrollIntoView({behavior:'smooth'});}}>Hay publicaciones nuevas · Ver</Button>}{query.isPending ? <><Skeleton/><Skeleton/></>:query.isError ? <ErrorState retry={query.refetch}/>:query.publications.length ? query.publications.map(publication => <PublicationCard key={publication.pid} publication={publication}/>):<EmptyState>No hay publicaciones para esta búsqueda.</EmptyState>}{query.hasNextPage && <Button variant="secondary" className="load-more" disabled={query.isFetchingNextPage} onClick={() => query.fetchNextPage()}><ArrowDown size={16}/>{query.isFetchingNextPage ? 'Cargando…':'Cargar más'}</Button>}</div></div></div>;
+}
