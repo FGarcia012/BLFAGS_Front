@@ -1,0 +1,1 @@
+Capturas del rediseño con datos ficticios: inicio-escritorio.png, feed-movil.png y registro-movil.png. Reemplazar únicamente con imágenes sin datos personales de un entorno de pruebas.
